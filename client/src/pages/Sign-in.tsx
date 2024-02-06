@@ -1,4 +1,4 @@
-import { Center, Heading, Flex, Button, Box } from '@chakra-ui/react'
+import { Center, Heading, Flex, Button, Box, useColorModeValue } from '@chakra-ui/react'
 import { useState } from 'react'
 import RegisterForm from '../components/RegisterForm'
 import LoginForm from '../components/LoginForm'
@@ -12,7 +12,7 @@ const SignIn = () => {
       <Box>
         <ThemeButton />
       </Box>
-      <Flex flexDirection='column' gap={4} p={4} border='1px' borderColor='black' rounded={16}>
+      <Flex flexDirection='column' gap={4} p={4} border='1px' borderColor={useColorModeValue('black', 'white')} rounded={16}>
         <Heading alignSelf='center'>Clonegram</Heading>
         {SignUp ? <RegisterForm /> : <LoginForm />}
         <Button

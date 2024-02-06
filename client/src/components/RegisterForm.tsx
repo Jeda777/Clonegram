@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Input, useToast } from '@chakra-ui/react'
+import { Button, FormControl, FormLabel, Input, useToast, useColorModeValue } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -71,11 +71,11 @@ const RegisterForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormControl display='flex' flexDirection='column'>
         <FormLabel>Email</FormLabel>
-        <Input mb={2} type='text' {...register('email')} />
+        <Input borderColor={useColorModeValue('black', 'white')} mb={2} type='text' {...register('email')} />
         <FormLabel>Username</FormLabel>
-        <Input mb={2} type='text' {...register('username')} />
+        <Input borderColor={useColorModeValue('black', 'white')} mb={2} type='text' {...register('username')} />
         <FormLabel>Password</FormLabel>
-        <Input mb={2} type='text' {...register('password')} />
+        <Input borderColor={useColorModeValue('black', 'white')} mb={2} type='text' {...register('password')} />
         <Button type='submit' colorScheme='messenger' isLoading={isSubmitting}>
           Sign Up
         </Button>
