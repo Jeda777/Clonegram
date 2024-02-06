@@ -10,6 +10,8 @@ import './index.css'
 
 const themeObject = {
   resetCSS: true,
+  initialColorMode: 'light',
+  useSystemColorMode: false,
   colors: {
     text: {
       secondary: '#c7c7ca',
