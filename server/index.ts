@@ -1,15 +1,23 @@
-import express, { Express, Request, Response } from 'express'
+import express, { Express } from 'express'
 import dotenv from 'dotenv'
+import socketio from 'socket.io'
+import http from 'http'
 
 dotenv.config()
-
-const app: Express = express()
 const port = process.env.PORT || 3000
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Server')
+const app = express()
+const httpServer = http.createServer(app)
+const io = new socketio.Server(httpServer, {
+  cors: {
+    origin: process.env.FRONTEND_SITE_URL!,
+  },
 })
 
-app.listen(port, () => {
+io.on('connection', (socket) => {
+  console.log(`connected ${socket.id}`)
+})
+
+httpServer.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`)
 })
