@@ -1,12 +1,11 @@
 import { Button, FormControl, FormLabel, Input, useToast } from '@chakra-ui/react'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import axios from 'axios'
 
 const RegisterForm = () => {
-  const emailRef = useRef<HTMLInputElement>(null)
-
   const toast = useToast()
 
   const resolver = z.object({
@@ -58,20 +57,26 @@ const RegisterForm = () => {
     }
   }, [errors])
 
-  useEffect(() => {
-    if (emailRef.current) emailRef.current.focus()
-  }, [])
+  const onSubmit = async (data: z.infer<typeof resolver>) => {
+    const postData = { actionType: 'login', email: data.email, password: data.password, username: data.username }
+    console.log(postData)
+    const result = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth`, postData, {
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true,
+    })
+    console.log(result)
+  }
 
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <FormControl display='flex' flexDirection='column'>
         <FormLabel>Email</FormLabel>
-        <Input mb={2} type='text' {...register('email')} ref={emailRef} />
+        <Input mb={2} type='text' {...register('email')} />
         <FormLabel>Username</FormLabel>
         <Input mb={2} type='text' {...register('username')} />
         <FormLabel>Password</FormLabel>
         <Input mb={2} type='text' {...register('password')} />
-        <Button type='submit' colorScheme='messenger'>
+        <Button type='submit' colorScheme='messenger' isLoading={isSubmitting}>
           Sign Up
         </Button>
       </FormControl>

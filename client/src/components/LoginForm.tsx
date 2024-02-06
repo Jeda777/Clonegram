@@ -1,12 +1,11 @@
 import { Button, FormControl, FormLabel, Input, useToast } from '@chakra-ui/react'
-import { useRef, useEffect } from 'react'
+import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import axios from 'axios'
 
 const LoginForm = () => {
-  const emailRef = useRef<HTMLInputElement>(null)
-
   const toast = useToast()
 
   const resolver = z.object({
@@ -20,15 +19,15 @@ const LoginForm = () => {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
+    getValues,
   } = useForm({
     resolver: zodResolver(resolver),
     defaultValues: { email: '', password: '' },
   })
 
-  const onSubmit = () => {}
-
   useEffect(() => {
     if (errors.email) {
+      console.log(getValues('email'))
       toast({
         title: 'Email invalid',
         description: errors.email.message,
@@ -48,18 +47,24 @@ const LoginForm = () => {
     }
   }, [errors])
 
-  useEffect(() => {
-    if (emailRef.current) emailRef.current.focus()
-  }, [])
+  const onSubmit = async (data: z.infer<typeof resolver>) => {
+    const postData = { actionType: 'login', email: data.email, password: data.password }
+    console.log(postData)
+    const result = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth`, postData, {
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true,
+    })
+    console.log(result)
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormControl display='flex' flexDirection='column'>
         <FormLabel>Email</FormLabel>
-        <Input mb={2} type='text' {...register('email')} ref={emailRef} />
+        <Input mb={2} type='email' {...register('email')} />
         <FormLabel>Password</FormLabel>
         <Input mb={2} type='text' {...register('password')} />
-        <Button type='submit' colorScheme='messenger'>
+        <Button type='submit' colorScheme='messenger' isLoading={isSubmitting}>
           Sign Up
         </Button>
       </FormControl>
