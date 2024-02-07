@@ -15,6 +15,8 @@ model User {
   password String @db.Text
   email String
 
+  refreshToken String @db.Text
+
   private Boolean @default(false)
 
   posts Post[]
