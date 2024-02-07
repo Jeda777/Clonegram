@@ -12,8 +12,10 @@ router.post('/auth', async (req: Request, res: Response) => {
   const { actionType, email, password, username, image } = req.body
   if (actionType === 'register') {
     if (!email || !password || !username || !image) return res.status(400).json({ error: 'Bad Request' })
-    const existingUser = await prisma.user.findFirst({ where: { username } })
-    if (existingUser) return res.status(409).json({ error: 'Username in use' })
+    const existingUsername = await prisma.user.findFirst({ where: { username } })
+    if (existingUsername) return res.status(409).json({ error: 'Username in use' })
+    const existingEmail = await prisma.user.findFirst({ where: { email } })
+    if (existingEmail) return res.status(409).json({ error: 'Email in use' })
     const base64Image: string = image.split(';base64,').pop()
     const imageUrl = `assets/profilePictures/${uuidv4()}.png`
     fs.writeFileSync(imageUrl, base64Image, { encoding: 'base64' })
