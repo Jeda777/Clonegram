@@ -22,4 +22,16 @@ router.post('/auth', (req: Request, res: Response) => {
   return res.json({ message: 'Everything is fine' })
 })
 
+router.get('/assets/profilePictures/:id', (req: Request, res: Response) => {
+  fs.readFile(req.url.slice(1), (err, data) => {
+    if (err) {
+      res.writeHead(404, { 'Content-Type': 'text/html' })
+      res.end('404: File not found')
+    } else {
+      res.writeHead(200, { 'Content-Type': 'text/html' })
+      res.end(data)
+    }
+  })
+})
+
 export default router
