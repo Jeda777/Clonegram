@@ -1,5 +1,5 @@
 import { UseFormSetValue } from 'react-hook-form'
-import { Box, IconButton, Image } from '@chakra-ui/react'
+import { Box, IconButton, Image, useColorModeValue } from '@chakra-ui/react'
 import { X } from 'lucide-react'
 
 interface props {
@@ -16,7 +16,7 @@ const ProfilePictureForm = ({ image, setValue }: props) => {
   return (
     <Box position='relative' mb={2} mx='auto'>
       <IconButton
-        icon={<X color='black' />}
+        icon={<X color={useColorModeValue('black', 'white')} />}
         aria-label='Remove Image'
         isRound
         variant='ghost'
