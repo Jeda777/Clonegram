@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios from 'axios'
 import { getBase64 } from '../../lib/getBase64'
+import ProfilePictureForm from './ProfilePictureForm'
 
 const RegisterForm = () => {
   const toast = useToast()
@@ -24,6 +25,7 @@ const RegisterForm = () => {
     handleSubmit,
     register,
     setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(resolver),
@@ -95,14 +97,20 @@ const RegisterForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <FormControl display='flex' flexDirection='column'>
-        <FormLabel>Profile picture</FormLabel>
-        <Input
-          borderColor={useColorModeValue('black', 'white')}
-          mb={2}
-          type='file'
-          accept='.png, .jpg, .jpeg'
-          onChange={(e) => handleImageChange(e)}
-        />
+        {watch('image') === '' ? (
+          <>
+            <FormLabel>Profile picture</FormLabel>
+            <Input
+              borderColor={useColorModeValue('black', 'white')}
+              mb={2}
+              type='file'
+              accept='.png, .jpg, .jpeg'
+              onChange={(e) => handleImageChange(e)}
+            />
+          </>
+        ) : (
+          <ProfilePictureForm image={watch('image')} setValue={setValue} />
+        )}
         <FormLabel>Email</FormLabel>
         <Input borderColor={useColorModeValue('black', 'white')} mb={2} type='text' {...register('email')} />
         <FormLabel>Username</FormLabel>
