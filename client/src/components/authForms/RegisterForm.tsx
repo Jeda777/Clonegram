@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { getBase64 } from '../../lib/getBase64'
 import ProfilePictureForm from './ProfilePictureForm'
 
@@ -79,11 +79,44 @@ const RegisterForm = () => {
       password: data.password,
       username: data.username,
     }
-    const result = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth`, postData, {
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true,
-    })
-    console.log(result)
+    try {
+      const result = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth`, postData, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      })
+      console.log(result)
+    } catch (e) {
+      const error = e as AxiosError
+      switch (error.response?.statusText) {
+        case 'Username in use':
+          toast({
+            title: 'Username in use',
+            status: 'error',
+            duration: 10000,
+            isClosable: true,
+          })
+          break
+        case 'Email in use':
+          toast({
+            title: 'Email in use',
+            status: 'error',
+            duration: 10000,
+            isClosable: true,
+          })
+          break
+        case 'Missing data':
+          toast({
+            title: 'Missing data',
+            status: 'error',
+            duration: 10000,
+            isClosable: true,
+          })
+          break
+        default:
+          console.log(error)
+          break
+      }
+    }
   }
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

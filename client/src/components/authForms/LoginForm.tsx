@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 
 const LoginForm = () => {
   const toast = useToast()
@@ -49,11 +49,28 @@ const LoginForm = () => {
 
   const onSubmit = async (data: z.infer<typeof resolver>) => {
     const postData = { actionType: 'login', email: data.email, password: data.password }
-    const result = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth`, postData, {
-      headers: { 'Content-Type': 'application/json' },
-      withCredentials: true,
-    })
-    console.log(result)
+    try {
+      const result = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth`, postData, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      })
+      console.log(result)
+    } catch (e) {
+      const error = e as AxiosError
+      switch (error.response?.statusText) {
+        case 'Missing data':
+          toast({
+            title: 'Missing data',
+            status: 'error',
+            duration: 10000,
+            isClosable: true,
+          })
+          break
+        default:
+          console.log(error)
+          break
+      }
+    }
   }
 
   return (
