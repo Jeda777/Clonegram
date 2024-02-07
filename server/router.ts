@@ -11,18 +11,30 @@ const router = express.Router()
 router.post('/auth', async (req: Request, res: Response) => {
   const { actionType, email, password, username, image } = req.body
   if (actionType === 'register') {
-    if (!email || !password || !username || !image) return res.status(400).json({ error: 'Bad Request' })
+    if (!email || !password || !username || !image) {
+      res.statusMessage = 'Missing data'
+      return res.sendStatus(400)
+    }
     const existingUsername = await prisma.user.findFirst({ where: { username } })
-    if (existingUsername) return res.status(409).json({ error: 'Username in use' })
+    if (existingUsername) {
+      res.statusMessage = 'Username in use'
+      return res.sendStatus(409)
+    }
     const existingEmail = await prisma.user.findFirst({ where: { email } })
-    if (existingEmail) return res.status(409).json({ error: 'Email in use' })
+    if (existingEmail) {
+      res.statusMessage = 'Email in use'
+      return res.sendStatus(409)
+    }
     const base64Image: string = image.split(';base64,').pop()
     const imageUrl = `assets/profilePictures/${uuidv4()}.png`
     fs.writeFileSync(imageUrl, base64Image, { encoding: 'base64' })
     const newUser = await registerUser(email, username, password, imageUrl)
     return res.json(newUser)
   } else if (actionType === 'login') {
-    if (!email || !password) return res.status(400).json({ error: 'Bad Request' })
+    if (!email || !password) {
+      res.statusMessage = 'Missing data'
+      return res.sendStatus(400)
+    }
     console.log(email, password)
     return res.json({ message: 'Everything is fine' })
   } else {
