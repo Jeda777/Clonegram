@@ -12,6 +12,8 @@ model User {
   id String @id @default(uuid())
   username String
   imageUrl String @db.Text
+  password String @db.Text
+  email String
 
   private Boolean @default(false)
 
