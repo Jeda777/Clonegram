@@ -7,6 +7,7 @@ import App from './pages/App.tsx'
 import SignIn from './pages/Sign-in.tsx'
 
 import './index.css'
+import { AuthProvider } from './lib/AuthProvider.tsx'
 
 const themeObject = {
   resetCSS: true,
@@ -31,8 +32,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ChakraProvider>
+    <AuthProvider>
+      <ChakraProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ChakraProvider>
+    </AuthProvider>
   </React.StrictMode>,
 )
