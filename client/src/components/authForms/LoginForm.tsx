@@ -49,7 +49,6 @@ const LoginForm = () => {
 
   const onSubmit = async (data: z.infer<typeof resolver>) => {
     const postData = { actionType: 'login', email: data.email, password: data.password }
-    console.log(postData)
     const result = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth`, postData, {
       headers: { 'Content-Type': 'application/json' },
       withCredentials: true,

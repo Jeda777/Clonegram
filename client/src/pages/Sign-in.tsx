@@ -1,7 +1,7 @@
 import { Center, Heading, Flex, Button, Box, useColorModeValue } from '@chakra-ui/react'
 import { useState } from 'react'
-import RegisterForm from '../components/RegisterForm'
-import LoginForm from '../components/LoginForm'
+import RegisterForm from '../components/authForms/RegisterForm'
+import LoginForm from '../components/authForms/LoginForm'
 import ThemeButton from '../components/ThemeButton'
 
 const SignIn = () => {
