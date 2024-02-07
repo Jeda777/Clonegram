@@ -13,6 +13,8 @@ model User {
   username String
   imageUrl String @db.Text
 
+  private Boolean @default(false)
+
   posts Post[]
   comments Comment[]
   likes Like[]
@@ -22,9 +24,23 @@ model User {
 
   following Follow[] @relation("following")
   followers Follow[] @relation("followers")
+
+  followingRequest FollowRequest[] @relation("following")
+  followersRequest FollowRequest[] @relation("followers")
 }
 
 model Follow {
+  id String @id @default(uuid())
+  followerId String
+  follower User @relation("following", fields: [followerId], references: [id], onDelete: Cascade)
+  userId String
+  user User @relation("followers", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([followerId])
+  @@index([userId])
+}
+
+model FollowRequest {
   id String @id @default(uuid())
   followerId String
   follower User @relation("following", fields: [followerId], references: [id], onDelete: Cascade)
