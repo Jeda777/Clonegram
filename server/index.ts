@@ -17,7 +17,7 @@ const httpServer = http.createServer(app)
 
 const io = new socketio.Server(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_SITE_URL,
+    origin: process.env.FRONTEND_URL,
   },
 })
 
