@@ -53,7 +53,6 @@ router.get('/assets/profilePictures/:id', (req: Request, res: Response) => {
 })
 
 router.get('/assets/posts/:id', (req: Request, res: Response) => {
-  console.log(req.url.slice(1))
   fs.readFile(req.url.slice(1), (err, data) => {
     if (err) {
       res.writeHead(404, { 'Content-Type': 'text/html' })
