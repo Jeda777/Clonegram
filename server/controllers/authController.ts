@@ -18,12 +18,10 @@ export const registerUser = async (email: string, username: string, password: st
   res.cookie('jwt', newUser.refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
   return res.json({
     accessToken,
-    user: {
-      email: newUser.email,
-      username: newUser.username,
-      imageUrl: newUser.imageUrl,
-      id: newUser.id,
-    },
+    email: newUser.email,
+    username: newUser.username,
+    imageUrl: newUser.imageUrl,
+    id: newUser.id,
   })
 }
 
@@ -49,11 +47,9 @@ export const loginUser = async (email: string, password: string, res: Response) 
   res.cookie('jwt', updatedUser.refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
   return res.json({
     accessToken,
-    user: {
-      email: updatedUser.email,
-      username: updatedUser.username,
-      imageUrl: updatedUser.imageUrl,
-      id: updatedUser.id,
-    },
+    email: updatedUser.email,
+    username: updatedUser.username,
+    imageUrl: updatedUser.imageUrl,
+    id: updatedUser.id,
   })
 }
