@@ -1,13 +1,18 @@
 import { Button, FormControl, FormLabel, Input, useColorModeValue } from '@chakra-ui/react'
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios, { AxiosError } from 'axios'
 import errorPopup from '../../lib/useErrorPopup'
+import authContext from '../../lib/AuthProvider'
+import { authObject } from '../../../types'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm = () => {
   const useErrorPopup = errorPopup()
+  const { setAuth } = useContext(authContext)
+  const navigate = useNavigate()
 
   const resolver = z.object({
     email: z.string().email({ message: 'Invalid email address' }),
@@ -20,7 +25,7 @@ const LoginForm = () => {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-    getValues,
+    reset,
   } = useForm({
     resolver: zodResolver(resolver),
     defaultValues: { email: '', password: '' },
@@ -28,7 +33,6 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (errors.email) {
-      console.log(getValues('email'))
       useErrorPopup({ name: 'Email invalid', description: errors.email.message })
     }
     if (errors.password) {
@@ -43,7 +47,16 @@ const LoginForm = () => {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
-      console.log(result)
+      const data = result.data as authObject
+      setAuth({
+        accessToken: data.accessToken,
+        email: data.email,
+        id: data.id,
+        imageUrl: data.imageUrl,
+        username: data.username,
+      })
+      reset()
+      return navigate('/')
     } catch (e) {
       const error = e as AxiosError
       switch (error.response?.statusText) {
