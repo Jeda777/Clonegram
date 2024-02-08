@@ -2,12 +2,18 @@ import React, { createContext, useState } from 'react'
 import { authObject } from '../../types'
 
 type authContextProps = {
-  auth: authObject | {}
-  setAuth: ({}: authObject | {}) => void
+  auth: authObject
+  setAuth: ({}: authObject) => void
 }
 
 const initialValue = {
-  auth: {},
+  auth: {
+    accessToken: '',
+    email: '',
+    id: '',
+    imageUrl: '',
+    username: '',
+  },
   setAuth: () => {},
 }
 
