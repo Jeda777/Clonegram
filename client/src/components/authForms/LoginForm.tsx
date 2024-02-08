@@ -1,17 +1,17 @@
 import { Button, FormControl, FormLabel, Input, useColorModeValue } from '@chakra-ui/react'
-import { useContext, useEffect } from 'react'
+import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios, { AxiosError } from 'axios'
 import errorPopup from '../../lib/useErrorPopup'
-import authContext from '../../lib/AuthProvider'
 import { authObject } from '../../../types'
 import { useNavigate } from 'react-router-dom'
+import useAuth from '../../hooks/useAuth'
 
 const LoginForm = () => {
   const useErrorPopup = errorPopup()
-  const { setAuth } = useContext(authContext)
+  const { setAuth } = useAuth()
   const navigate = useNavigate()
 
   const resolver = z.object({
