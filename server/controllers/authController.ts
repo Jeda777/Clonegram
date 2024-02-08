@@ -15,6 +15,7 @@ export const registerUser = async (email: string, username: string, password: st
     data: { imageUrl: moddifiedImageUrl, username, email, password: encryptedPassword, refreshToken },
   })
 
+  res.cookie('jwt', newUser.refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
   return res.json({
     accessToken,
     user: {
@@ -22,7 +23,6 @@ export const registerUser = async (email: string, username: string, password: st
       username: newUser.username,
       imageUrl: newUser.imageUrl,
       id: newUser.id,
-      refreshToken: newUser.refreshToken,
     },
   })
 }
@@ -46,6 +46,7 @@ export const loginUser = async (email: string, password: string, res: Response) 
   })
   const updatedUser = await prisma.user.update({ where: { email }, data: { refreshToken } })
 
+  res.cookie('jwt', updatedUser.refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
   return res.json({
     accessToken,
     user: {
@@ -53,7 +54,6 @@ export const loginUser = async (email: string, password: string, res: Response) 
       username: updatedUser.username,
       imageUrl: updatedUser.imageUrl,
       id: updatedUser.id,
-      refreshToken: updatedUser.refreshToken,
     },
   })
 }
