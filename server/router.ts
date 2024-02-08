@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { PrismaClient } from '@prisma/client'
 import { loginUser, registerUser } from './controllers/authController'
 import handleRefreshToken from './controllers/refreshTokenController'
+import handleLogout from './controllers/logoutController'
 
 const prisma = new PrismaClient()
 
@@ -42,6 +43,7 @@ router.post('/auth', async (req: Request, res: Response) => {
 })
 
 router.get('/refresh', handleRefreshToken)
+router.get('logout', handleLogout)
 
 router.get('/assets/profilePictures/:id', (req: Request, res: Response) => {
   fs.readFile(req.url.slice(1), (err, data) => {
