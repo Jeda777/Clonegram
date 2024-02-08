@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express'
 import fs from 'fs'
 import { v4 as uuidv4 } from 'uuid'
 import { PrismaClient } from '@prisma/client'
-import { registerUser } from './controllers/authController'
+import { loginUser, registerUser } from './controllers/authController'
 
 const prisma = new PrismaClient()
 
@@ -28,15 +28,13 @@ router.post('/auth', async (req: Request, res: Response) => {
     const base64Image: string = image.split(';base64,').pop()
     const imageUrl = `assets/profilePictures/${uuidv4()}.png`
     fs.writeFileSync(imageUrl, base64Image, { encoding: 'base64' })
-    const newUser = await registerUser(email, username, password, imageUrl)
-    return res.json(newUser)
+    registerUser(email, username, password, imageUrl, res)
   } else if (actionType === 'login') {
     if (!email || !password) {
       res.statusMessage = 'Missing data'
       return res.sendStatus(400)
     }
-    console.log(email, password)
-    return res.json({ message: 'Everything is fine' })
+    loginUser(email, password, res)
   } else {
     return res.status(400).json({ error: 'Bad Request' })
   }
