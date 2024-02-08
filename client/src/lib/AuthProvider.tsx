@@ -1,9 +1,9 @@
-import React, { createContext, useState } from 'react'
+import React, { Dispatch, SetStateAction, createContext, useState } from 'react'
 import { authObject } from '../../types'
 
 type authContextProps = {
   auth: authObject
-  setAuth: ({}: authObject) => void
+  setAuth: Dispatch<SetStateAction<authObject>>
 }
 
 const initialValue = {
