@@ -1,12 +1,13 @@
-import { Button, FormControl, FormLabel, Input, useToast, useColorModeValue } from '@chakra-ui/react'
+import { Button, FormControl, FormLabel, Input, useColorModeValue } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios, { AxiosError } from 'axios'
+import errorPopup from '../../lib/useErrorPopup'
 
 const LoginForm = () => {
-  const toast = useToast()
+  const useErrorPopup = errorPopup()
 
   const resolver = z.object({
     email: z.string().email({ message: 'Invalid email address' }),
@@ -28,22 +29,10 @@ const LoginForm = () => {
   useEffect(() => {
     if (errors.email) {
       console.log(getValues('email'))
-      toast({
-        title: 'Email invalid',
-        description: errors.email.message,
-        status: 'error',
-        duration: 10000,
-        isClosable: true,
-      })
+      useErrorPopup({ name: 'Email invalid', description: errors.email.message })
     }
     if (errors.password) {
-      toast({
-        title: 'Password invalid',
-        description: errors.password.message,
-        status: 'error',
-        duration: 10000,
-        isClosable: true,
-      })
+      useErrorPopup({ name: 'Password invalid', description: errors.password.message })
     }
   }, [errors])
 
@@ -59,12 +48,7 @@ const LoginForm = () => {
       const error = e as AxiosError
       switch (error.response?.statusText) {
         case 'Missing data':
-          toast({
-            title: 'Missing data',
-            status: 'error',
-            duration: 10000,
-            isClosable: true,
-          })
+          useErrorPopup({ name: 'Missing data' })
           break
         default:
           console.log(error)

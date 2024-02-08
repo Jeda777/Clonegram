@@ -1,4 +1,4 @@
-import { Button, FormControl, FormLabel, Input, useToast, useColorModeValue } from '@chakra-ui/react'
+import { Button, FormControl, FormLabel, Input, useColorModeValue } from '@chakra-ui/react'
 import React, { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -6,9 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import axios, { AxiosError } from 'axios'
 import { getBase64 } from '../../lib/getBase64'
 import ProfilePictureForm from './ProfilePictureForm'
+import errorPopup from '../../lib/useErrorPopup'
 
 const RegisterForm = () => {
-  const toast = useToast()
+  const useErrorPopup = errorPopup()
 
   const resolver = z.object({
     image: z.string().includes('data:image/', { message: 'Image not set' }),
@@ -34,40 +35,16 @@ const RegisterForm = () => {
 
   useEffect(() => {
     if (errors.image) {
-      toast({
-        title: 'Image invalid',
-        description: errors.image.message,
-        status: 'error',
-        duration: 10000,
-        isClosable: true,
-      })
+      useErrorPopup({ name: 'Image invalid', description: errors.image.message })
     }
     if (errors.email) {
-      toast({
-        title: 'Email invalid',
-        description: errors.email.message,
-        status: 'error',
-        duration: 10000,
-        isClosable: true,
-      })
+      useErrorPopup({ name: 'Email invalid', description: errors.email.message })
     }
     if (errors.username) {
-      toast({
-        title: 'Username invalid',
-        description: errors.username.message,
-        status: 'error',
-        duration: 10000,
-        isClosable: true,
-      })
+      useErrorPopup({ name: 'Username invalid', description: errors.username.message })
     }
     if (errors.password) {
-      toast({
-        title: 'Password invalid',
-        description: errors.password.message,
-        status: 'error',
-        duration: 10000,
-        isClosable: true,
-      })
+      useErrorPopup({ name: 'Password invalid', description: errors.password.message })
     }
   }, [errors])
 
@@ -89,28 +66,13 @@ const RegisterForm = () => {
       const error = e as AxiosError
       switch (error.response?.statusText) {
         case 'Username in use':
-          toast({
-            title: 'Username in use',
-            status: 'error',
-            duration: 10000,
-            isClosable: true,
-          })
+          useErrorPopup({ name: 'Username in use' })
           break
         case 'Email in use':
-          toast({
-            title: 'Email in use',
-            status: 'error',
-            duration: 10000,
-            isClosable: true,
-          })
+          useErrorPopup({ name: 'Email in use' })
           break
         case 'Missing data':
-          toast({
-            title: 'Missing data',
-            status: 'error',
-            duration: 10000,
-            isClosable: true,
-          })
+          useErrorPopup({ name: 'Missing data' })
           break
         default:
           console.log(error)
