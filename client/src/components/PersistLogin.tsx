@@ -9,23 +9,23 @@ const PersistLogin = () => {
   const { auth, persist } = useAuth()
 
   useEffect(() => {
+    let isMounted = true
     const verifyRefreshToken = async () => {
       try {
         await refresh()
       } catch (error) {
         console.log(error)
       } finally {
-        setIsLoading(false)
+        isMounted && setIsLoading(false)
       }
     }
 
     auth.accessToken === '' && persist ? verifyRefreshToken() : setIsLoading(false)
-  }, [])
 
-  useEffect(() => {
-    console.log(`isLoading: ${isLoading}`)
-    console.log(`at: ${auth.accessToken}`)
-  }, [isLoading])
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   return <>{!persist ? <Outlet /> : isLoading ? <p>Loading</p> : <Outlet />}</>
 }
