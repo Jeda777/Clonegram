@@ -8,7 +8,6 @@ const useRefreshToken = () => {
   const refresh = async () => {
     if (auth.username === '' || auth.username === undefined) {
       const result = await axios.get('/refresh', { withCredentials: true, params: { getUserInfo: true } })
-      console.log(result.data)
       setAuth({
         email: result.data.email,
         accessToken: result.data.accessToken,
