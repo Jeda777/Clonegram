@@ -8,6 +8,7 @@ import SignIn from './pages/Sign-in.tsx'
 
 import './index.css'
 import { AuthProvider } from './lib/AuthProvider.tsx'
+import ProtectedRoutes from './components/ProtectedRoutes.tsx'
 
 const themeObject = {
   resetCSS: true,
@@ -25,7 +26,8 @@ const theme = extendTheme(themeObject)
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <ProtectedRoutes />,
+    children: [{ path: '/', element: <App /> }],
   },
   { path: '/sign-in', element: <SignIn /> },
 ])
