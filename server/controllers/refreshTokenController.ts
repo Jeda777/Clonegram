@@ -14,11 +14,33 @@ const handleRefreshToken = async (req: Request, res: Response) => {
   const existingUser = await prisma.user.findFirst({ where: { refreshToken } })
   if (!existingUser) return res.sendStatus(403)
 
-  jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (error: jwt.VerifyErrors | null, decoded: string | jwt.JwtPayload | undefined) => {
-    if (error || existingUser.username !== (decoded as any).username) return res.sendStatus(403)
-    const accessToken = jwt.sign({ username: existingUser.username }, ACCESS_TOKEN_SECRET, { expiresIn: '30s' })
-    res.json({ accessToken })
-  })
+  if (req.query.getUserInfo === 'true') {
+    jwt.verify(
+      refreshToken,
+      REFRESH_TOKEN_SECRET,
+      (error: jwt.VerifyErrors | null, decoded: string | jwt.JwtPayload | undefined) => {
+        if (error || existingUser.username !== (decoded as any).username) return res.sendStatus(403)
+        const accessToken = jwt.sign({ username: existingUser.username }, ACCESS_TOKEN_SECRET, { expiresIn: '30s' })
+        res.json({
+          accessToken,
+          username: existingUser.username,
+          id: existingUser.id,
+          imageUrl: existingUser.imageUrl,
+          email: existingUser.email,
+        })
+      },
+    )
+  } else {
+    jwt.verify(
+      refreshToken,
+      REFRESH_TOKEN_SECRET,
+      (error: jwt.VerifyErrors | null, decoded: string | jwt.JwtPayload | undefined) => {
+        if (error || existingUser.username !== (decoded as any).username) return res.sendStatus(403)
+        const accessToken = jwt.sign({ username: existingUser.username }, ACCESS_TOKEN_SECRET, { expiresIn: '30s' })
+        res.json({ accessToken })
+      },
+    )
+  }
 }
 
 export default handleRefreshToken
