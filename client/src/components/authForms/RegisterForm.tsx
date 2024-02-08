@@ -8,13 +8,15 @@ import { getBase64 } from '../../lib/getBase64'
 import ProfilePictureForm from './ProfilePictureForm'
 import errorPopup from '../../hooks/useErrorPopup'
 import { authObject } from '../../../types'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 
 const RegisterForm = () => {
   const useErrorPopup = errorPopup()
   const { setAuth } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/'
 
   const resolver = z.object({
     image: z.string().includes('data:image/', { message: 'Image not set' }),
@@ -76,7 +78,7 @@ const RegisterForm = () => {
         username: data.username,
       })
       reset()
-      return navigate('/')
+      return navigate(from, { replace: true })
     } catch (e) {
       const error = e as AxiosError
       switch (error.response?.statusText) {

@@ -6,13 +6,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import axios, { AxiosError } from 'axios'
 import errorPopup from '../../hooks/useErrorPopup'
 import { authObject } from '../../../types'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 
 const LoginForm = () => {
   const useErrorPopup = errorPopup()
   const { setAuth } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/'
 
   const resolver = z.object({
     email: z.string().email({ message: 'Invalid email address' }),
@@ -56,7 +58,7 @@ const LoginForm = () => {
         username: data.username,
       })
       reset()
-      return navigate('/')
+      return navigate(from, { replace: true })
     } catch (e) {
       const error = e as AxiosError
       switch (error.response?.statusText) {
