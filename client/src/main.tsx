@@ -2,14 +2,19 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 
 import App from './pages/App.tsx'
 import SignIn from './pages/Sign-in.tsx'
-
-import './index.css'
 import { AuthProvider } from './lib/AuthProvider.tsx'
 import ProtectedRoutes from './components/ProtectedRoutes.tsx'
 import PersistLogin from './components/PersistLogin.tsx'
+
+import './index.css'
+
+if (import.meta.env.NODE_ENV === 'production') {
+  disableReactDevTools()
+}
 
 const themeObject = {
   resetCSS: true,
