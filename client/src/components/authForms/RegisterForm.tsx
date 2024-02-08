@@ -98,6 +98,7 @@ const RegisterForm = () => {
             <Input
               borderColor={useColorModeValue('black', 'white')}
               mb={2}
+              w={215}
               type='file'
               accept='.png, .jpg, .jpeg'
               onChange={(e) => handleImageChange(e)}
