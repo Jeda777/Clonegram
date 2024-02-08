@@ -3,6 +3,7 @@ import fs from 'fs'
 import { v4 as uuidv4 } from 'uuid'
 import { PrismaClient } from '@prisma/client'
 import { loginUser, registerUser } from './controllers/authController'
+import handleRefreshToken from './controllers/refreshTokenController'
 
 const prisma = new PrismaClient()
 
@@ -39,6 +40,8 @@ router.post('/auth', async (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Bad Request' })
   }
 })
+
+router.get('/refresh', handleRefreshToken)
 
 router.get('/assets/profilePictures/:id', (req: Request, res: Response) => {
   fs.readFile(req.url.slice(1), (err, data) => {
