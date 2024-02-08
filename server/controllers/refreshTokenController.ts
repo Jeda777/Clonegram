@@ -14,12 +14,11 @@ const handleRefreshToken = async (req: Request, res: Response) => {
   const existingUser = await prisma.user.findFirst({ where: { refreshToken } })
   if (!existingUser) return res.sendStatus(403)
 
-  const token = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET)
-  if (!token) return res.sendStatus(403)
-
-  const accessToken = jwt.sign({ username: (token as any).username }, ACCESS_TOKEN_SECRET, { expiresIn: '30s' })
-
-  res.json({ accessToken })
+  jwt.verify(refreshToken, REFRESH_TOKEN_SECRET, (error: jwt.VerifyErrors | null, decoded: string | jwt.JwtPayload | undefined) => {
+    if (error || existingUser.username !== (decoded as any).username) return res.sendStatus(403)
+    const accessToken = jwt.sign({ username: existingUser.username }, ACCESS_TOKEN_SECRET, { expiresIn: '30s' })
+    res.json({ accessToken })
+  })
 }
 
 export default handleRefreshToken
