@@ -50,6 +50,12 @@ const LoginForm = () => {
         case 'Missing data':
           useErrorPopup({ name: 'Missing data' })
           break
+        case 'User with provided email not found':
+          useErrorPopup({ name: `User with that email doesn't exist` })
+          break
+        case 'Invalid password':
+          useErrorPopup({ name: 'Incorrect password' })
+          break
         default:
           console.log(error)
           break
