@@ -3,13 +3,14 @@ import React, { useEffect } from 'react'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import axios, { AxiosError } from 'axios'
+import { AxiosError } from 'axios'
 import { getBase64 } from '../../lib/getBase64'
 import ProfilePictureForm from './ProfilePictureForm'
 import errorPopup from '../../hooks/useErrorPopup'
 import { authObject } from '../../../types'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
+import axios from '../../api/axios'
 
 const RegisterForm = () => {
   const useErrorPopup = errorPopup()
@@ -65,7 +66,7 @@ const RegisterForm = () => {
       username: data.username,
     }
     try {
-      const result = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth`, postData, {
+      const result = await axios.post('/auth', postData, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
