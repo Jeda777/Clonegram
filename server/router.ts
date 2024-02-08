@@ -43,7 +43,7 @@ router.post('/auth', async (req: Request, res: Response) => {
 })
 
 router.get('/refresh', handleRefreshToken)
-router.get('logout', handleLogout)
+router.get('/logout', handleLogout)
 
 router.get('/assets/profilePictures/:id', (req: Request, res: Response) => {
   fs.readFile(req.url.slice(1), (err, data) => {
