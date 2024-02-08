@@ -9,6 +9,7 @@ import SignIn from './pages/Sign-in.tsx'
 import './index.css'
 import { AuthProvider } from './lib/AuthProvider.tsx'
 import ProtectedRoutes from './components/ProtectedRoutes.tsx'
+import PersistLogin from './components/PersistLogin.tsx'
 
 const themeObject = {
   resetCSS: true,
@@ -25,10 +26,15 @@ const theme = extendTheme(themeObject)
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <ProtectedRoutes />,
-    children: [{ path: '/', element: <App /> }],
+    element: <PersistLogin />,
+    children: [
+      {
+        element: <ProtectedRoutes />,
+        children: [{ path: '/', element: <App /> }],
+      },
+    ],
   },
+
   { path: '/sign-in', element: <SignIn /> },
 ])
 
