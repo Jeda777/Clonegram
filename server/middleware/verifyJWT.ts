@@ -1,9 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
-
-interface customRequest extends Request {
-  username: string
-}
+import { customRequest } from '../types'
 
 const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
   const SECRET = process.env.ACCESS_TOKEN_SECRET as string
