@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { disableReactDevTools } from '@fvilers/disable-react-devtools'
+import { Provider } from 'react-redux'
 
 import App from './pages/App.tsx'
 import SignIn from './pages/Sign-in.tsx'
@@ -10,6 +11,7 @@ import { AuthProvider } from './lib/AuthProvider.tsx'
 import ProtectedRoutes from './components/ProtectedRoutes.tsx'
 import PersistLogin from './components/PersistLogin.tsx'
 import Layout from './components/Layout.tsx'
+import { store } from './app/store.ts'
 
 import './index.css'
 
@@ -52,9 +54,11 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <AuthProvider>
-      <ChakraProvider theme={theme}>
-        <RouterProvider router={router} />
-      </ChakraProvider>
+      <Provider store={store}>
+        <ChakraProvider theme={theme}>
+          <RouterProvider router={router} />
+        </ChakraProvider>
+      </Provider>
     </AuthProvider>
   </React.StrictMode>,
 )
