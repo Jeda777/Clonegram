@@ -1,10 +1,13 @@
 import { Flex, IconButton, useColorMode, useColorModeValue } from '@chakra-ui/react'
 import { Moon, Send, Sun } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useAppDispatch } from '../../../hooks/useReduxHooks'
+import { setTabClose } from '../../../app/tabsSlice'
 
 const MobileNavTop = () => {
   const { colorMode, toggleColorMode } = useColorMode()
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   return (
     <Flex
@@ -25,7 +28,16 @@ const MobileNavTop = () => {
         isRound
         onClick={() => toggleColorMode()}
       />
-      <IconButton aria-label='Conversations' icon={<Send />} variant='ghost' isRound onClick={() => navigate('/conversations')} />
+      <IconButton
+        aria-label='Conversations'
+        icon={<Send />}
+        variant='ghost'
+        isRound
+        onClick={() => {
+          dispatch(setTabClose())
+          navigate('/conversations')
+        }}
+      />
     </Flex>
   )
 }
