@@ -1,10 +1,10 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import useAuth from '../hooks/useAuth'
+import { useAppSelector } from '../hooks/useReduxHooks'
 
 const ProtectedRoutes = () => {
-  const { auth } = useAuth()
+  const accessToken = useAppSelector((state) => state.auth.accessToken)
   const location = useLocation()
-  return auth.accessToken ? <Outlet /> : <Navigate to='/sign-in' state={{ from: location }} replace />
+  return accessToken ? <Outlet /> : <Navigate to='/sign-in' state={{ from: location }} replace />
 }
 
 export default ProtectedRoutes

@@ -9,15 +9,16 @@ import ProfilePictureForm from './ProfilePictureForm'
 import errorPopup from '../../hooks/useErrorPopup'
 import { authObject } from '../../../types'
 import { useLocation, useNavigate } from 'react-router-dom'
-import useAuth from '../../hooks/useAuth'
 import axios from '../../api/axios'
+import { setAuthData } from '../../app/authSlice'
+import { useAppDispatch } from '../../hooks/useReduxHooks'
 
 const RegisterForm = () => {
   const useErrorPopup = errorPopup()
-  const { setAuth } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from?.pathname || '/'
+  const dispatch = useAppDispatch()
 
   const resolver = z.object({
     image: z.string().includes('data:image/', { message: 'Image not set' }),
@@ -71,13 +72,15 @@ const RegisterForm = () => {
         withCredentials: true,
       })
       const data = result.data as authObject
-      setAuth({
-        accessToken: data.accessToken,
-        email: data.email,
-        id: data.id,
-        imageUrl: data.imageUrl,
-        username: data.username,
-      })
+      dispatch(
+        setAuthData({
+          accessToken: data.accessToken,
+          email: data.email,
+          id: data.id,
+          imageUrl: data.imageUrl,
+          username: data.username,
+        }),
+      )
       reset()
       return navigate(from, { replace: true })
     } catch (e) {

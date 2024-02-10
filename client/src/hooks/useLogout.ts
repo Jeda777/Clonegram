@@ -1,11 +1,12 @@
 import axios from '../api/axios'
-import useAuth from './useAuth'
+import { logOut } from '../app/authSlice'
+import { useAppDispatch } from './useReduxHooks'
 
 const useLogout = () => {
-  const { setAuth } = useAuth()
+  const dispatch = useAppDispatch()
 
   const logout = async () => {
-    setAuth({ accessToken: '', email: '', id: '', imageUrl: '', username: '' })
+    dispatch(logOut())
     try {
       const result = await axios.get('/logout', { withCredentials: true })
     } catch (error) {

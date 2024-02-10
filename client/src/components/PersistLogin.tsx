@@ -1,13 +1,13 @@
 import { Outlet } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import useRefreshToken from '../hooks/useRefreshToken'
-import useAuth from '../hooks/useAuth'
 import Loading from './Loading'
+import { useAppSelector } from '../hooks/useReduxHooks'
 
 const PersistLogin = () => {
   const [isLoading, setIsLoading] = useState(true)
   const refresh = useRefreshToken()
-  const { auth, persist } = useAuth()
+  const auth = useAppSelector((state) => state.auth)
 
   useEffect(() => {
     let isMounted = true
@@ -21,14 +21,14 @@ const PersistLogin = () => {
       }
     }
 
-    auth.accessToken === '' && persist ? verifyRefreshToken() : setIsLoading(false)
+    auth.accessToken === '' && auth.persist ? verifyRefreshToken() : setIsLoading(false)
 
     return () => {
       isMounted = false
     }
   }, [])
 
-  return <>{!persist ? <Outlet /> : isLoading ? <Loading /> : <Outlet />}</>
+  return <>{!auth.persist ? <Outlet /> : isLoading ? <Loading /> : <Outlet />}</>
 }
 
 export default PersistLogin

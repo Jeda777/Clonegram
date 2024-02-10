@@ -3,14 +3,16 @@ import { useEffect, useState } from 'react'
 import RegisterForm from '../components/authForms/RegisterForm'
 import LoginForm from '../components/authForms/LoginForm'
 import ThemeButton from '../components/ThemeButton'
-import useAuth from '../hooks/useAuth'
+import { useAppDispatch, useAppSelector } from '../hooks/useReduxHooks'
+import { setPersist } from '../app/authSlice'
 
 const SignIn = () => {
   const [SignUp, setSignUp] = useState(false)
-  const { persist, setPersist } = useAuth()
+  const persist = useAppSelector((state) => state.auth.persist)
+  const dispatch = useAppDispatch()
 
   const handlePersist = () => {
-    setPersist((prev) => !prev)
+    dispatch(setPersist(!persist))
   }
 
   useEffect(() => {
