@@ -5,7 +5,7 @@ import MobileNavTop from './navigation/mobile/MobileNavTop'
 
 const Layout = () => {
   return (
-    <Box pt={14}>
+    <Box py={[14, null, 0]}>
       <Hide above='md'>
         <MobileNavTop />
         <MobileNavBottom />
