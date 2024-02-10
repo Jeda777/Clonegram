@@ -9,6 +9,7 @@ import SignIn from './pages/Sign-in.tsx'
 import { AuthProvider } from './lib/AuthProvider.tsx'
 import ProtectedRoutes from './components/ProtectedRoutes.tsx'
 import PersistLogin from './components/PersistLogin.tsx'
+import Layout from './components/Layout.tsx'
 
 import './index.css'
 
@@ -31,11 +32,16 @@ const theme = extendTheme(themeObject)
 
 const router = createBrowserRouter([
   {
-    element: <PersistLogin />,
+    element: <Layout />,
     children: [
       {
-        element: <ProtectedRoutes />,
-        children: [{ path: '/', element: <App /> }],
+        element: <PersistLogin />,
+        children: [
+          {
+            element: <ProtectedRoutes />,
+            children: [{ path: '/', element: <App /> }],
+          },
+        ],
       },
     ],
   },
