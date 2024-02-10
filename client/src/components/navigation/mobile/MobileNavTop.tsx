@@ -7,7 +7,7 @@ const MobileNavTop = () => {
 
   return (
     <Flex width='100%' position='fixed' top={0} justifyContent='end' py={2} px={7}>
-      <IconButton aria-label='Home' icon={<Send />} variant='ghost' isRound onClick={() => navigate('/conversations')} />
+      <IconButton aria-label='Conversations' icon={<Send />} variant='ghost' isRound onClick={() => navigate('/conversations')} />
     </Flex>
   )
 }

@@ -10,10 +10,10 @@ const MobileNavBottom = () => {
   return (
     <Flex width='100%' position='fixed' bottom={0} justifyContent='space-between' py={2} px={7}>
       <IconButton aria-label='Home' icon={<Home />} variant='ghost' isRound onClick={() => navigate('/')} />
-      <IconButton aria-label='Home' icon={<Search />} variant='ghost' isRound />
-      <IconButton aria-label='Home' icon={<ImagePlus />} variant='ghost' isRound />
+      <IconButton aria-label='Search' icon={<Search />} variant='ghost' isRound />
+      <IconButton aria-label='Add post' icon={<ImagePlus />} variant='ghost' isRound />
       <IconButton
-        aria-label='Home'
+        aria-label='User page'
         icon={<CircleUserRound />}
         variant='ghost'
         isRound
