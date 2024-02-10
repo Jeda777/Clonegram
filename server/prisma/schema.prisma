@@ -14,6 +14,7 @@ model User {
   imageUrl String @db.Text
   password String @db.Text
   email String @unique
+  description String? @db.Text
 
   refreshToken String @db.Text
 
@@ -40,6 +41,8 @@ model Follow {
   userId String
   user User @relation("followers", fields: [userId], references: [id], onDelete: Cascade)
 
+  createdAt DateTime @default(now())
+
   @@index([followerId])
   @@index([userId])
 }
@@ -51,6 +54,8 @@ model FollowRequest {
   userId String
   user User @relation("followers", fields: [userId], references: [id], onDelete: Cascade)
 
+  createdAt DateTime @default(now())
+
   @@index([followerId])
   @@index([userId])
 }
@@ -60,6 +65,8 @@ model Post {
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   imageUrl String @db.Text
+
+  createdAt DateTime @default(now())
 
   comments Comment[]
   likes Like[]
@@ -75,6 +82,8 @@ model Comment {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   content String @db.Text
 
+  createdAt DateTime @default(now())
+
   @@index([postId])
   @@index([userId])
 }
@@ -85,6 +94,8 @@ model Like {
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
 
   @@index([postId])
   @@index([userId])
@@ -108,6 +119,8 @@ model Message {
   conversationId String
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   content String @db.Text
+
+  createdAt DateTime @default(now())
 
   @@index([conversationId])
 }
