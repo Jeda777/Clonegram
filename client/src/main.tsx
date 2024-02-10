@@ -33,10 +33,10 @@ const theme = extendTheme(themeObject)
 
 const router = createBrowserRouter([
   {
-    element: <Layout />,
+    element: <PersistLogin />,
     children: [
       {
-        element: <PersistLogin />,
+        element: <Layout />,
         children: [
           {
             element: <ProtectedRoutes />,
