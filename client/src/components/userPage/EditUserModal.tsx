@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   Flex,
   FormControl,
   FormLabel,
@@ -20,14 +21,16 @@ interface props {
   isOpen: boolean
   onClose: () => void
   description: string | null
+  isPrivate: boolean
 }
 
-const EditUserModal = ({ description, isOpen, onClose }: props) => {
+const EditUserModal = ({ description, isPrivate, isOpen, onClose }: props) => {
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
 
   const resolver = z.object({
     description: z.string().nullable(),
+    isPrivate: z.boolean(),
   })
 
   const {
@@ -37,7 +40,7 @@ const EditUserModal = ({ description, isOpen, onClose }: props) => {
     reset,
   } = useForm({
     resolver: zodResolver(resolver),
-    defaultValues: { description },
+    defaultValues: { description, isPrivate },
   })
 
   const onSubmit = async (data: z.infer<typeof resolver>) => {
@@ -60,6 +63,8 @@ const EditUserModal = ({ description, isOpen, onClose }: props) => {
         <ModalBody>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl>
+              <FormLabel>Private Profile</FormLabel>
+              <Checkbox {...register('isPrivate')} />
               <FormLabel>Description</FormLabel>
               <Textarea {...register('description')} />
             </FormControl>

@@ -139,7 +139,12 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
         </Flex>
       </Hide>
 
-      <EditUserModal description={userInfo.description} isOpen={editModal.isOpen} onClose={editModal.onClose} />
+      <EditUserModal
+        description={userInfo.description}
+        isPrivate={userInfo.private}
+        isOpen={editModal.isOpen}
+        onClose={editModal.onClose}
+      />
       <UnfollowModal username={userInfo.username} isOpen={unfollowModal.isOpen} onClose={unfollowModal.onClose} />
     </Flex>
   )
