@@ -4,11 +4,12 @@ type tabsTypes = 'search'
 
 interface tabsSliceInterface {
   isOpen: boolean
-  type?: tabsTypes
+  type: tabsTypes | undefined
 }
 
 const initialState: tabsSliceInterface = {
   isOpen: false,
+  type: undefined,
 }
 
 export const tabsSlice = createSlice({
