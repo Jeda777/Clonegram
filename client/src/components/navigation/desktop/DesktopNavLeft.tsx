@@ -11,7 +11,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react'
 import { Home, ImagePlus, Search, Send, Menu as MenuIcon, Sun, Moon, LogOut, Heart } from 'lucide-react'
-import { setTabClose, setTabOpen } from '../../../app/tabsSlice'
+import { setTabClose, setTabToggle } from '../../../app/tabsSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks'
 import { useNavigate } from 'react-router-dom'
 import useLogout from '../../../hooks/useLogout'
@@ -64,7 +64,7 @@ const DesktopNavLeft = () => {
           <Button
             aria-label='Search'
             leftIcon={<Search width='1.5em' height='1.5em' />}
-            onClick={() => dispatch(setTabOpen('search'))}
+            onClick={() => dispatch(setTabToggle('search'))}
             {...buttonProps}
           >
             Search
@@ -83,7 +83,7 @@ const DesktopNavLeft = () => {
           <Button
             aria-label='Search'
             leftIcon={<Heart width='1.5em' height='1.5em' />}
-            onClick={() => dispatch(setTabOpen('notifications'))}
+            onClick={() => dispatch(setTabToggle('notifications'))}
             {...buttonProps}
           >
             Notifications

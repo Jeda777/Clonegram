@@ -1,7 +1,14 @@
 import express from 'express'
 import { handleUserDataGet, handleUserDescriptionAndPrivateUpdate } from './controllers/userDataController'
-import { createFollow, createFollowRequest, removeFollow, removeFollowRequest } from './controllers/followController'
-import { handleNotificationsGet } from './controllers/notificationsController'
+import {
+  acceptFollowRequest,
+  createFollow,
+  createFollowRequest,
+  denyFollowRequest,
+  removeFollow,
+  removeFollowRequest,
+} from './controllers/followController'
+import { handleNotificationsDelete, handleNotificationsGet } from './controllers/notificationsController'
 
 const verifiedRouter = express.Router()
 
@@ -16,5 +23,8 @@ verifiedRouter.post('/protected/followRequest/:username', createFollowRequest)
 verifiedRouter.delete('/protected/unfollowRequest/:username', removeFollowRequest)
 
 verifiedRouter.get('/protected/notifications', handleNotificationsGet)
+verifiedRouter.delete('/protected/notifications/:notificationId', handleNotificationsDelete)
+verifiedRouter.post('/protected/notifications/accept/:notificationId', acceptFollowRequest)
+verifiedRouter.delete('/protected/notifications/deny/:notificationId', denyFollowRequest)
 
 export default verifiedRouter

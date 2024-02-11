@@ -78,3 +78,47 @@ export const removeFollowRequest = async (req: Request, res: Response) => {
   await prisma.notification.deleteMany({ where: { type: 'FollowRequest', fromUserId: follower.id, receiverUserId: user.id } })
   return res.sendStatus(200)
 }
+
+export const acceptFollowRequest = async (req: Request, res: Response) => {
+  const requesterUsername = (req as customRequest).username
+  const { notificationId } = req.params
+
+  const notification = await prisma.notification.findUnique({ where: { id: notificationId }, include: { receiverUser: true } })
+  if (!notification) return res.sendStatus(404)
+
+  if (notification.receiverUser.username !== requesterUsername) return res.sendStatus(401)
+
+  await prisma.notification.delete({ where: { id: notificationId } })
+
+  const followRequest = await prisma.followRequest.findMany({
+    where: { followerId: notification.fromUserId, userId: notification.receiverUserId },
+  })
+  if (!followRequest) return res.sendStatus(404)
+
+  await prisma.followRequest.deleteMany({ where: { followerId: notification.fromUserId, userId: notification.receiverUserId } })
+
+  await prisma.follow.create({ data: { followerId: followRequest[0].followerId, userId: followRequest[0].userId } })
+
+  return res.sendStatus(200)
+}
+
+export const denyFollowRequest = async (req: Request, res: Response) => {
+  const requesterUsername = (req as customRequest).username
+  const { notificationId } = req.params
+
+  const notification = await prisma.notification.findUnique({ where: { id: notificationId }, include: { receiverUser: true } })
+  if (!notification) return res.sendStatus(404)
+
+  if (notification.receiverUser.username !== requesterUsername) return res.sendStatus(401)
+
+  await prisma.notification.delete({ where: { id: notificationId } })
+
+  const followRequest = await prisma.followRequest.findMany({
+    where: { followerId: notification.fromUserId, userId: notification.receiverUserId },
+  })
+  if (!followRequest) return res.sendStatus(404)
+
+  await prisma.followRequest.deleteMany({ where: { followerId: notification.fromUserId, userId: notification.receiverUserId } })
+
+  return res.sendStatus(200)
+}

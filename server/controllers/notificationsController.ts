@@ -19,3 +19,19 @@ export const handleNotificationsGet = async (req: Request, res: Response) => {
 
   return res.json(notifications)
 }
+
+export const handleNotificationsDelete = async (req: Request, res: Response) => {
+  const username = (req as customRequest).username
+  const { notificationId } = req.params
+
+  const notification = await prisma.notification.findUnique({
+    where: { id: notificationId },
+    include: { receiverUser: true },
+  })
+  if (!notification) return res.sendStatus(404)
+  if (notification?.receiverUser.username !== username) return res.sendStatus(401)
+
+  await prisma.notification.delete({ where: { id: notificationId } })
+
+  return res.sendStatus(200)
+}
