@@ -62,3 +62,10 @@ export const handleUserDataGet = async (req: Request, res: Response) => {
   }
   return res.json(dataWithPosts)
 }
+
+export const handleUserDescriptionUpdate = async (req: Request, res: Response) => {
+  const requesterUsername = (req as customRequest).username
+  const { description } = req.body
+  await prisma.user.update({ where: { username: requesterUsername }, data: { description } })
+  return res.sendStatus(200)
+}
