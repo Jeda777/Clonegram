@@ -13,6 +13,8 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import useAxiosPrivate from '../../hooks/useAxiosPrivate'
+import { useNavigate } from 'react-router-dom'
 
 interface props {
   isOpen: boolean
@@ -21,6 +23,9 @@ interface props {
 }
 
 const EditUserModal = ({ description, isOpen, onClose }: props) => {
+  const axiosPrivate = useAxiosPrivate()
+  const navigate = useNavigate()
+
   const resolver = z.object({
     description: z.string().nullable(),
   })
@@ -36,7 +41,10 @@ const EditUserModal = ({ description, isOpen, onClose }: props) => {
   })
 
   const onSubmit = async (data: z.infer<typeof resolver>) => {
-    //TODO fetch api
+    await axiosPrivate.patch('protected/user/updateDescription', data)
+    reset()
+    customOnClose()
+    navigate(0)
   }
 
   const customOnClose = () => {
