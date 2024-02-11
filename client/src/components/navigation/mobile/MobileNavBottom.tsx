@@ -34,7 +34,13 @@ const MobileNavBottom = () => {
         }}
       />
       <IconButton aria-label='Search' icon={<Search />} variant='ghost' isRound onClick={() => dispatch(setTabToggle('search'))} />
-      <IconButton aria-label='Add post' icon={<ImagePlus />} variant='ghost' isRound onClick={() => dispatch(setTabClose())} />
+      <IconButton
+        aria-label='Add post'
+        icon={<ImagePlus />}
+        variant='ghost'
+        isRound
+        onClick={() => dispatch(setTabToggle('createPost'))}
+      />
       <Menu>
         <MenuButton as={IconButton} aria-label='User menu' icon={<CircleUserRound />} variant='ghost' isRound />
         <MenuList>

@@ -91,7 +91,7 @@ const DesktopNavLeft = () => {
           <Button
             aria-label='Add post'
             leftIcon={<ImagePlus width='1.5em' height='1.5em' />}
-            onClick={() => dispatch(setTabClose())}
+            onClick={() => dispatch(setTabToggle('createPost'))}
             {...buttonProps}
           >
             Add Post

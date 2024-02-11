@@ -5,6 +5,7 @@ import MobileNavTop from './navigation/mobile/MobileNavTop'
 import SearchTab from './navigation/SearchTab'
 import DesktopNavLeft from './navigation/desktop/DesktopNavLeft'
 import NotificationsTab from './navigation/NotificationsTab'
+import CreatePostTab from './navigation/CreatePostTab'
 
 const Layout = () => {
   return (
@@ -18,6 +19,7 @@ const Layout = () => {
       </Show>
       <SearchTab />
       <NotificationsTab />
+      <CreatePostTab />
       <Outlet />
     </Box>
   )

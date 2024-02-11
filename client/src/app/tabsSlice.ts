@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-type tabsTypes = 'search' | 'notifications'
+type tabsTypes = 'search' | 'notifications' | 'createPost'
 
 interface tabsSliceInterface {
   isOpen: boolean
@@ -21,8 +21,13 @@ export const tabsSlice = createSlice({
       state.type = undefined
     },
     setTabToggle: (state, action: PayloadAction<tabsTypes>) => {
-      state.isOpen = !state.isOpen
-      state.type = action.payload
+      if (action.payload === state.type) {
+        state.isOpen = false
+        state.type = undefined
+      } else {
+        state.isOpen = true
+        state.type = action.payload
+      }
     },
   },
 })
