@@ -26,10 +26,15 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
     } else if (isOwnUser) {
       editModal.onOpen()
     } else if (userInfo.private) {
-      //TODO create follow request
+      handleFollowRequest()
     } else {
       handleFollow()
     }
+  }
+
+  const handleFollowRequest = async () => {
+    await axiosPrivate.post(`/protected/followRequest/${userInfo.username}`)
+    navigate(0)
   }
 
   const handleFollow = async () => {
