@@ -3,6 +3,6 @@ import { handleUserDataGet } from './controllers/userDataController'
 
 const verifiedRouter = express.Router()
 
-verifiedRouter.get('/protected/user/:username', handleUserDataGet)
+verifiedRouter.get('/protected/user/getData/:username', handleUserDataGet)
 
 export default verifiedRouter

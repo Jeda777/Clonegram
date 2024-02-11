@@ -18,7 +18,7 @@ const UserPage = () => {
 
     const getUser = async () => {
       try {
-        const result = await axiosPrivate.get(`/protected/user/${username}`, { signal: controller.signal })
+        const result = await axiosPrivate.get(`/protected/user/getData/${username}`, { signal: controller.signal })
         setData(result.data)
       } catch (error) {
         console.log(error)
