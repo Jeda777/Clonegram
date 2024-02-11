@@ -8,6 +8,8 @@ export const handleUserDataGet = async (req: Request, res: Response) => {
   const { username } = req.params
   const requesterUsername = (req as customRequest).username
 
+  const requester = await prisma.user.findUnique({ where: { username: requesterUsername } })
+
   const user = await prisma.user.findUnique({
     where: { username },
     select: {
@@ -26,9 +28,9 @@ export const handleUserDataGet = async (req: Request, res: Response) => {
     return res.sendStatus(404)
   }
 
-  const following = await prisma.follow.findFirst({ where: { userId: user.id, follower: { username } } })
+  const following = await prisma.follow.findFirst({ where: { userId: user.id, followerId: requester?.id } })
   const isFollowing = !following ? false : true
-  const followRequested = await prisma.followRequest.findFirst({ where: { userId: user.id, follower: { username } } })
+  const followRequested = await prisma.followRequest.findFirst({ where: { userId: user.id, followerId: requester?.id } })
   const isRequested = !followRequested ? false : true
   const isOwnUser = requesterUsername === user.username
 
