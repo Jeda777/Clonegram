@@ -30,7 +30,7 @@ const UserPage = () => {
       isMounted = false
       controller.abort()
     }
-  }, [])
+  }, [username])
 
   if (data === null) {
     return <Loading />
