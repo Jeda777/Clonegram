@@ -22,7 +22,7 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
     if (isFollowing) {
       unfollowModal.onOpen()
     } else if (isRequested) {
-      //TODO undo request
+      handleRemoveFollowRequest()
     } else if (isOwnUser) {
       editModal.onOpen()
     } else if (userInfo.private) {
@@ -34,6 +34,11 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
 
   const handleFollowRequest = async () => {
     await axiosPrivate.post(`/protected/followRequest/${userInfo.username}`)
+    navigate(0)
+  }
+
+  const handleRemoveFollowRequest = async () => {
+    await axiosPrivate.delete(`/protected/unfollowRequest/${userInfo.username}`)
     navigate(0)
   }
 
