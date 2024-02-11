@@ -16,17 +16,17 @@ export const tabsSlice = createSlice({
   name: 'tabs',
   initialState,
   reducers: {
-    setTabOpen: (state, action: PayloadAction<tabsTypes>) => {
-      state.isOpen = true
-      state.type = action.payload
-    },
     setTabClose: (state) => {
       state.isOpen = false
       state.type = undefined
     },
+    setTabToggle: (state, action: PayloadAction<tabsTypes>) => {
+      state.isOpen = !state.isOpen
+      state.type = action.payload
+    },
   },
 })
 
-export const { setTabOpen, setTabClose } = tabsSlice.actions
+export const { setTabClose, setTabToggle } = tabsSlice.actions
 
 export default tabsSlice.reducer

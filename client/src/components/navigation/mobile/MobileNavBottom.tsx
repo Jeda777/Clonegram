@@ -2,7 +2,7 @@ import { Flex, IconButton, Image, Menu, MenuButton, MenuItem, MenuList, useColor
 import { CircleUserRound, Home, ImagePlus, LogOut, Moon, Search, Sun } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks'
-import { setTabClose, setTabOpen } from '../../../app/tabsSlice'
+import { setTabClose, setTabToggle } from '../../../app/tabsSlice'
 import useLogout from '../../../hooks/useLogout'
 
 const MobileNavBottom = () => {
@@ -33,7 +33,7 @@ const MobileNavBottom = () => {
           navigate('/')
         }}
       />
-      <IconButton aria-label='Search' icon={<Search />} variant='ghost' isRound onClick={() => dispatch(setTabOpen('search'))} />
+      <IconButton aria-label='Search' icon={<Search />} variant='ghost' isRound onClick={() => dispatch(setTabToggle('search'))} />
       <IconButton aria-label='Add post' icon={<ImagePlus />} variant='ghost' isRound onClick={() => dispatch(setTabClose())} />
       <Menu>
         <MenuButton as={IconButton} aria-label='User menu' icon={<CircleUserRound />} variant='ghost' isRound />

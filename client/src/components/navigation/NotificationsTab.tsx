@@ -47,7 +47,16 @@ const NotificationsTab = () => {
         Notifications
       </Text>
       <Flex flexDirection='column' gap={1} alignItems={['center', null, 'start']}>
-        {notifications !== null && notifications.map((n) => <NotificationCard sender={n.fromUser} type={n.type} />)}
+        {notifications !== null &&
+          notifications.map((n) => (
+            <NotificationCard
+              key={n.id}
+              sender={n.fromUser}
+              type={n.type}
+              notificationId={n.id}
+              setNotifications={setNotifications}
+            />
+          ))}
       </Flex>
     </Flex>
   )
