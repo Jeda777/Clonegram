@@ -3,6 +3,7 @@ import { api_user_username_data_user } from '../../../types'
 import EditUserModal from './EditUserModal'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { useNavigate } from 'react-router-dom'
+import UnfollowModal from './UnfollowModal'
 
 interface props {
   userInfo: api_user_username_data_user
@@ -13,12 +14,13 @@ interface props {
 
 const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
   const editModal = useDisclosure({ id: 'editModal' })
+  const unfollowModal = useDisclosure({ id: 'unfollowModal' })
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
 
   const handleMainButton = () => {
     if (isFollowing) {
-      //TODO open unfollow modal
+      unfollowModal.onOpen()
     } else if (isRequested) {
       //TODO undo request
     } else if (userInfo.private) {
@@ -138,6 +140,7 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
       </Hide>
 
       <EditUserModal description={userInfo.description} isOpen={editModal.isOpen} onClose={editModal.onClose} />
+      <UnfollowModal username={userInfo.username} isOpen={unfollowModal.isOpen} onClose={unfollowModal.onClose} />
     </Flex>
   )
 }
