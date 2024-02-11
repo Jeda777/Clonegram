@@ -37,6 +37,7 @@ const DesktopNavLeft = () => {
     <Flex
       flexDirection='column'
       height='100vh'
+      left={0}
       py={14}
       px={[4, null, null, null, 6]}
       gap={[8, null, null, 12, 16]}

@@ -7,7 +7,7 @@ import DesktopNavLeft from './navigation/desktop/DesktopNavLeft'
 
 const Layout = () => {
   return (
-    <Box py={[14, null, 0]}>
+    <Box py={[14, null, 0]} pl={[0, null, '208px', '224px', '272px', '336px']}>
       <Hide above='md'>
         <MobileNavTop />
         <MobileNavBottom />
