@@ -1,5 +1,5 @@
 import { Center } from '@chakra-ui/react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import Loading from '../components/Loading'
@@ -12,6 +12,7 @@ import UserPostsContainer from '../components/userPage/UserPostsContainer'
 const UserPage = () => {
   const { username } = useParams()
   const axiosPrivate = useAxiosPrivate()
+  const location = useLocation()
 
   const [data, setData] = useState<api_user_username_data | null>(null)
 
@@ -27,13 +28,13 @@ const UserPage = () => {
         console.log(error)
       }
     }
-    getUser()
+    if (location.pathname.includes('user')) getUser()
 
     return () => {
       isMounted = false
       controller.abort()
     }
-  }, [username])
+  }, [username, location.pathname])
 
   if (data === null) {
     return <Loading />
