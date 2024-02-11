@@ -13,7 +13,7 @@ const UserPost = ({ imageUrl, id, commentsCount, likesCount }: props) => {
   const navigate = useNavigate()
 
   return (
-    <GridItem position='relative' onClick={() => navigate(`/post/${id}`)}>
+    <GridItem position='relative' onClick={() => navigate(`/post/${id}`)} cursor='pointer'>
       <Flex
         position='absolute'
         justifyContent='center'

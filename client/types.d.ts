@@ -8,13 +8,15 @@ export type authObject = {
 
 export type api_user_username_data_user = {
   description: string | null
-  followersCount: number
-  followingCount: number
   id: string
   imageUrl: string
-  postsCount: number
   private: boolean
   username: string
+  _count: {
+    followers: number
+    following: number
+    posts: number
+  }
 }
 
 export type api_user_username_data_post = {
@@ -22,8 +24,10 @@ export type api_user_username_data_post = {
   userId: string
   imageUrl: string
   createdAt: Date
-  commentsCount: number
-  likesCount: number
+  _count: {
+    comments: number
+    likes: number
+  }
 }
 
 export type api_user_username_data = {

@@ -24,7 +24,6 @@ model User {
   notificationsSend Notification[] @relation("sentNotifications")
 
   posts Post[]
-  postsCount Int @default(0)
   comments Comment[]
   likes Like[]
 
@@ -32,9 +31,7 @@ model User {
   conversationsReceived Conversation[] @relation("user2")
 
   following Follow[] @relation("following")
-  followingCount Int @default(0)
   followers Follow[] @relation("followers")
-  followersCount Int @default(0)
 
   followingRequest FollowRequest[] @relation("following")
   followersRequest FollowRequest[] @relation("followers")
@@ -96,9 +93,7 @@ model Post {
   createdAt DateTime @default(now())
 
   comments Comment[]
-  commentsCount Int @default(0)
   likes Like[]
-  likesCount Int @default(0)
 
   @@index([userId])
 }

@@ -18,9 +18,13 @@ export const handleUserDataGet = async (req: Request, res: Response) => {
       description: true,
       private: true,
       id: true,
-      postsCount: true,
-      followersCount: true,
-      followingCount: true,
+      _count: {
+        select: {
+          followers: true,
+          following: true,
+          posts: true,
+        },
+      },
     },
   })
   if (!user) {
@@ -56,7 +60,10 @@ export const handleUserDataGet = async (req: Request, res: Response) => {
 
   if (!isAllowed) return res.json(data)
 
-  const posts = await prisma.post.findMany({ where: { userId: user.id } })
+  const posts = await prisma.post.findMany({
+    where: { userId: user.id },
+    include: { _count: { select: { comments: true, likes: true } } },
+  })
 
   const dataWithPosts = {
     ...data,

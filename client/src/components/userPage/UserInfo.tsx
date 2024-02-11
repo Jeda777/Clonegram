@@ -21,10 +21,10 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
   const handleMainButton = () => {
     if (isFollowing) {
       unfollowModal.onOpen()
-    } else if (isRequested) {
-      handleRemoveFollowRequest()
     } else if (isOwnUser) {
       editModal.onOpen()
+    } else if (isRequested) {
+      handleRemoveFollowRequest()
     } else if (userInfo.private) {
       handleFollowRequest()
     } else {
@@ -71,12 +71,12 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
               <Button width='40' onClick={handleMainButton}>
                 {isFollowing
                   ? 'Following'
+                  : isOwnUser
+                  ? 'Edit Profile'
                   : isRequested
                   ? 'Follow requested'
                   : userInfo.private
                   ? 'Request follow'
-                  : isOwnUser
-                  ? 'Edit Profile'
                   : 'Follow'}
               </Button>
               {!isOwnUser && (
@@ -94,30 +94,30 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
           >
             <Hide above='lg'>
               <Flex flexDirection='column' alignItems='center'>
-                <Text fontWeight='600'>{userInfo.postsCount}</Text>
+                <Text fontWeight='600'>{userInfo._count.posts}</Text>
                 <Text>Posts</Text>
               </Flex>
               <Flex flexDirection='column' alignItems='center'>
-                <Text fontWeight='600'>{userInfo.followersCount}</Text>
+                <Text fontWeight='600'>{userInfo._count.followers}</Text>
                 <Text>Followers</Text>
               </Flex>
               <Flex flexDirection='column' alignItems='center'>
-                <Text fontWeight='600'>{userInfo.followingCount}</Text>
+                <Text fontWeight='600'>{userInfo._count.following}</Text>
                 <Text>Following</Text>
               </Flex>
             </Hide>
             <Show above='lg'>
               <Flex gap={1} alignItems='center'>
                 <Text>Posts:</Text>
-                <Text fontWeight='600'>{userInfo.postsCount}</Text>
+                <Text fontWeight='600'>{userInfo._count.posts}</Text>
               </Flex>
               <Flex gap={1} alignItems='center'>
                 <Text>Followers:</Text>
-                <Text fontWeight='600'>{userInfo.followersCount}</Text>
+                <Text fontWeight='600'>{userInfo._count.followers}</Text>
               </Flex>
               <Flex gap={1} alignItems='center'>
                 <Text>Following:</Text>
-                <Text fontWeight='600'>{userInfo.followingCount}</Text>
+                <Text fontWeight='600'>{userInfo._count.following}</Text>
               </Flex>
             </Show>
           </Flex>
