@@ -1,13 +1,16 @@
-import { Flex, IconButton, useColorModeValue } from '@chakra-ui/react'
-import { CircleUserRound, Home, ImagePlus, Search } from 'lucide-react'
+import { Flex, IconButton, Image, Menu, MenuButton, MenuItem, MenuList, useColorMode, useColorModeValue } from '@chakra-ui/react'
+import { CircleUserRound, Home, ImagePlus, LogOut, Moon, Search, Sun } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks'
 import { setTabClose, setTabOpen } from '../../../app/tabsSlice'
+import useLogout from '../../../hooks/useLogout'
 
 const MobileNavBottom = () => {
   const auth = useAppSelector((state) => state.auth)
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const { colorMode, toggleColorMode } = useColorMode()
+  const logout = useLogout()
 
   return (
     <Flex
@@ -32,16 +35,36 @@ const MobileNavBottom = () => {
       />
       <IconButton aria-label='Search' icon={<Search />} variant='ghost' isRound onClick={() => dispatch(setTabOpen('search'))} />
       <IconButton aria-label='Add post' icon={<ImagePlus />} variant='ghost' isRound onClick={() => dispatch(setTabClose())} />
-      <IconButton
-        aria-label='User page'
-        icon={<CircleUserRound />}
-        variant='ghost'
-        isRound
-        onClick={() => {
-          dispatch(setTabClose())
-          navigate(`/user/${auth.username}`)
-        }}
-      />
+      <Menu>
+        <MenuButton as={IconButton} aria-label='User menu' icon={<CircleUserRound />} variant='ghost' isRound />
+        <MenuList>
+          <MenuItem
+            icon={<Image width={6} height={6} src={auth.imageUrl} alt='Profile picture' rounded='100%' />}
+            onClick={() => {
+              dispatch(setTabClose())
+              navigate(`/user/${auth.username}`)
+            }}
+          >
+            {auth.username}
+          </MenuItem>
+          <MenuItem
+            icon={colorMode === 'dark' ? <Sun width={24} height={24} /> : <Moon width={24} height={24} />}
+            onClick={() => toggleColorMode()}
+            closeOnSelect={false}
+          >
+            {colorMode === 'dark' ? 'Light mode' : 'Dark mode'}
+          </MenuItem>
+          <MenuItem
+            icon={<LogOut width={24} height={24} />}
+            onClick={async () => {
+              dispatch(setTabClose())
+              await logout()
+            }}
+          >
+            Logout
+          </MenuItem>
+        </MenuList>
+      </Menu>
     </Flex>
   )
 }
