@@ -20,6 +20,9 @@ model User {
 
   private Boolean @default(false)
 
+  notificationsRecived Notification[] @relation("recivedNorifications")
+  notificationsSend Notification[] @relation("sentNotifications")
+
   posts Post[]
   postsCount Int @default(0)
   comments Comment[]
@@ -35,6 +38,27 @@ model User {
 
   followingRequest FollowRequest[] @relation("following")
   followersRequest FollowRequest[] @relation("followers")
+}
+
+enum NotificationTypes {
+  FollowRequest
+  Follow
+  Like
+  Comment
+}
+
+model Notification {
+  id String @id @default(uuid())
+  receiverUserId String
+  receiverUser User @relation("recivedNorifications", fields: [receiverUserId], references: [id], onDelete: Cascade)
+  type NotificationTypes
+  fromUserId String
+  fromUser User @relation("sentNotifications", fields: [fromUserId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([receiverUserId])
+  @@index([fromUserId])
 }
 
 model Follow {
