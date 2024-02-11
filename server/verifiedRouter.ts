@@ -1,6 +1,6 @@
 import express from 'express'
 import { handleUserDataGet, handleUserDescriptionAndPrivateUpdate } from './controllers/userDataController'
-import { createFollow, removeFollow } from './controllers/followController'
+import { createFollow, createFollowRequest, removeFollow } from './controllers/followController'
 
 const verifiedRouter = express.Router()
 
@@ -10,5 +10,7 @@ verifiedRouter.patch('/protected/user/updateDescription', handleUserDescriptionA
 
 verifiedRouter.post('/protected/follow/:username', createFollow)
 verifiedRouter.delete('/protected/unfollow/:username', removeFollow)
+
+verifiedRouter.post('/protected/followRequest/:username', createFollowRequest)
 
 export default verifiedRouter
