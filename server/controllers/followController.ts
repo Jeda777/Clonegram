@@ -96,8 +96,9 @@ export const acceptFollowRequest = async (req: Request, res: Response) => {
   if (!followRequest) return res.sendStatus(404)
 
   await prisma.followRequest.deleteMany({ where: { followerId: notification.fromUserId, userId: notification.receiverUserId } })
-
   await prisma.follow.create({ data: { followerId: followRequest[0].followerId, userId: followRequest[0].userId } })
+  await prisma.user.update({ where: { id: notification.fromUserId }, data: { followingCount: { increment: 1 } } })
+  await prisma.user.update({ where: { id: notification.receiverUserId }, data: { followersCount: { increment: 1 } } })
 
   return res.sendStatus(200)
 }
