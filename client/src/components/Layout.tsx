@@ -1,8 +1,9 @@
-import { Box, Hide } from '@chakra-ui/react'
+import { Box, Hide, Show } from '@chakra-ui/react'
 import { Outlet } from 'react-router-dom'
 import MobileNavBottom from './navigation/mobile/MobileNavBottom'
 import MobileNavTop from './navigation/mobile/MobileNavTop'
 import SearchTab from './navigation/SearchTab'
+import DesktopNavLeft from './navigation/desktop/DesktopNavLeft'
 
 const Layout = () => {
   return (
@@ -11,6 +12,9 @@ const Layout = () => {
         <MobileNavTop />
         <MobileNavBottom />
       </Hide>
+      <Show above='md'>
+        <DesktopNavLeft />
+      </Show>
       <SearchTab />
       <Outlet />
     </Box>
