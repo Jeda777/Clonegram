@@ -23,10 +23,10 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
       unfollowModal.onOpen()
     } else if (isRequested) {
       //TODO undo request
-    } else if (userInfo.private) {
-      //TODO create follow request
     } else if (isOwnUser) {
       editModal.onOpen()
+    } else if (userInfo.private) {
+      //TODO create follow request
     } else {
       handleFollow()
     }
@@ -125,10 +125,10 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
               ? 'Following'
               : isRequested
               ? 'Follow requested'
-              : userInfo.private
-              ? 'Request follow'
               : isOwnUser
               ? 'Edit Profile'
+              : userInfo.private
+              ? 'Request follow'
               : 'Follow'}
           </Button>
           {!isOwnUser && (
