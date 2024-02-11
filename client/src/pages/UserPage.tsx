@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import Loading from '../components/Loading'
 import { api_user_username_data } from '../../types'
-import UserInfo from '../components/userPage/userInfo'
+import UserInfo from '../components/userPage/UserInfo'
 
 const UserPage = () => {
   const { username } = useParams()
