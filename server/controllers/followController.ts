@@ -20,6 +20,7 @@ export const createFollow = async (req: Request, res: Response) => {
   })
   if (!user) return res.status(404)
   await prisma.follow.create({ data: { followerId: follower.id, userId: user.id } })
+  await prisma.notification.create({ data: { type: 'Follow', fromUserId: follower.id, receiverUserId: user.id } })
   return res.sendStatus(200)
 }
 
@@ -56,6 +57,7 @@ export const createFollowRequest = async (req: Request, res: Response) => {
   })
   if (!user) return res.status(404)
   await prisma.followRequest.create({ data: { followerId: follower.id, userId: user.id } })
+  await prisma.notification.create({ data: { type: 'FollowRequest', fromUserId: follower.id, receiverUserId: user.id } })
   return res.sendStatus(200)
 }
 
@@ -73,5 +75,6 @@ export const removeFollowRequest = async (req: Request, res: Response) => {
   })
   if (!user) return res.status(404)
   await prisma.followRequest.deleteMany({ where: { followerId: follower.id, userId: user.id } })
+  await prisma.notification.deleteMany({ where: { type: 'FollowRequest', fromUserId: follower.id, receiverUserId: user.id } })
   return res.sendStatus(200)
 }
