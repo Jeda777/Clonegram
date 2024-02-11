@@ -1,5 +1,6 @@
-import { Button, Flex, Hide, Image, Show, Text } from '@chakra-ui/react'
+import { Button, Flex, Hide, Image, Show, Text, useDisclosure } from '@chakra-ui/react'
 import { api_user_username_data_user } from '../../../types'
+import EditUserModal from './EditUserModal'
 
 interface props {
   userInfo: api_user_username_data_user
@@ -9,6 +10,8 @@ interface props {
 }
 
 const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
+  const editModal = useDisclosure({ id: 'editModal' })
+
   const handleMainButton = () => {
     if (isFollowing) {
       //TODO open unfollow modal
@@ -17,7 +20,7 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
     } else if (userInfo.private) {
       //TODO create follow request
     } else if (isOwnUser) {
-      //TODO open edit modal
+      editModal.onOpen()
     } else {
       //TODO follow
     }
@@ -118,6 +121,8 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
           </Button>
         </Flex>
       </Hide>
+
+      <EditUserModal description={userInfo.description} isOpen={editModal.isOpen} onClose={editModal.onClose} />
     </Flex>
   )
 }
