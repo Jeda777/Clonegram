@@ -4,6 +4,7 @@ import MobileNavBottom from './navigation/mobile/MobileNavBottom'
 import MobileNavTop from './navigation/mobile/MobileNavTop'
 import SearchTab from './navigation/SearchTab'
 import DesktopNavLeft from './navigation/desktop/DesktopNavLeft'
+import NotificationsTab from './navigation/NotificationsTab'
 
 const Layout = () => {
   return (
@@ -16,6 +17,7 @@ const Layout = () => {
         <DesktopNavLeft />
       </Show>
       <SearchTab />
+      <NotificationsTab />
       <Outlet />
     </Box>
   )

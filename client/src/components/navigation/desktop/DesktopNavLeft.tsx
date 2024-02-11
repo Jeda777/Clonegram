@@ -10,7 +10,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from '@chakra-ui/react'
-import { Home, ImagePlus, Search, Send, Menu as MenuIcon, Sun, Moon, LogOut } from 'lucide-react'
+import { Home, ImagePlus, Search, Send, Menu as MenuIcon, Sun, Moon, LogOut, Heart } from 'lucide-react'
 import { setTabClose, setTabOpen } from '../../../app/tabsSlice'
 import { useAppDispatch, useAppSelector } from '../../../hooks/useReduxHooks'
 import { useNavigate } from 'react-router-dom'
@@ -79,6 +79,14 @@ const DesktopNavLeft = () => {
             {...buttonProps}
           >
             Conversations
+          </Button>
+          <Button
+            aria-label='Search'
+            leftIcon={<Heart width='1.5em' height='1.5em' />}
+            onClick={() => dispatch(setTabOpen('notifications'))}
+            {...buttonProps}
+          >
+            Notifications
           </Button>
           <Button
             aria-label='Add post'

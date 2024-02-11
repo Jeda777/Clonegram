@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
-type tabsTypes = 'search'
+type tabsTypes = 'search' | 'notifications'
 
 interface tabsSliceInterface {
   isOpen: boolean

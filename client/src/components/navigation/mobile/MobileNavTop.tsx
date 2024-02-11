@@ -1,8 +1,8 @@
 import { Flex, IconButton, useColorModeValue } from '@chakra-ui/react'
-import { Send } from 'lucide-react'
+import { Search, Send } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../../hooks/useReduxHooks'
-import { setTabClose } from '../../../app/tabsSlice'
+import { setTabClose, setTabOpen } from '../../../app/tabsSlice'
 
 const MobileNavTop = () => {
   const navigate = useNavigate()
@@ -20,6 +20,13 @@ const MobileNavTop = () => {
       background={useColorModeValue('gray.50', 'gray.900')}
       zIndex={10}
     >
+      <IconButton
+        aria-label='Search'
+        icon={<Search />}
+        variant='ghost'
+        isRound
+        onClick={() => dispatch(setTabOpen('notifications'))}
+      />
       <IconButton
         aria-label='Conversations'
         icon={<Send />}
