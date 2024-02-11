@@ -55,7 +55,7 @@ const EditUserModal = ({ description, isOpen, onClose }: props) => {
   return (
     <Modal isOpen={isOpen} onClose={customOnClose}>
       <ModalOverlay />
-      <ModalContent maxWidth='90%'>
+      <ModalContent maxWidth='500px' width='90%' ml={[0, null, '208px', '224px', '272px', '336px']}>
         <ModalHeader>Edit Profile</ModalHeader>
         <ModalBody>
           <form onSubmit={handleSubmit(onSubmit)}>
