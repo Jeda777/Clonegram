@@ -56,9 +56,11 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
                   ? 'Edit Profile'
                   : 'Follow'}
               </Button>
-              <Button width='40' onClick={handleConversation}>
-                Conversation
-              </Button>
+              {!isOwnUser && (
+                <Button width='40' onClick={handleConversation}>
+                  Conversation
+                </Button>
+              )}
             </Flex>
           </Show>
           <Flex
@@ -116,9 +118,11 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
               ? 'Edit Profile'
               : 'Follow'}
           </Button>
-          <Button width='50%' onClick={handleConversation}>
-            Conversation
-          </Button>
+          {!isOwnUser && (
+            <Button width='50%' onClick={handleConversation}>
+              Conversation
+            </Button>
+          )}
         </Flex>
       </Hide>
 
