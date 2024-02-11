@@ -39,7 +39,7 @@ const MobileNavBottom = () => {
         <MenuButton as={IconButton} aria-label='User menu' icon={<CircleUserRound />} variant='ghost' isRound />
         <MenuList>
           <MenuItem
-            icon={<Image width={6} height={6} src={auth.imageUrl} alt='Profile picture' rounded='100%' />}
+            icon={<Image width={6} height={6} src={auth.imageUrl} alt='Profile picture' rounded='100%' fit='cover' />}
             onClick={() => {
               dispatch(setTabClose())
               navigate(`/user/${auth.username}`)

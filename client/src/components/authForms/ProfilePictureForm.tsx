@@ -31,7 +31,7 @@ const ProfilePictureForm = ({ image, setValue }: props) => {
         top='-10%'
         onClick={() => setValue('image', '')}
       />
-      <Image src={image} boxSize={100} alt='Profile Picture' rounded='100%' />
+      <Image src={image} boxSize={100} alt='Profile Picture' rounded='100%' fit='cover' />
     </Box>
   )
 }

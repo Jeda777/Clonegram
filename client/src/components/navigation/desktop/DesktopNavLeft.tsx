@@ -90,7 +90,7 @@ const DesktopNavLeft = () => {
           </Button>
           <Button
             aria-label='User page'
-            leftIcon={<Image width='1.5em' height='1.5em' src={auth.imageUrl} alt='Profile picture' rounded='100%' />}
+            leftIcon={<Image width='1.5em' height='1.5em' src={auth.imageUrl} alt='Profile picture' rounded='100%' fit='cover' />}
             onClick={() => {
               dispatch(setTabClose())
               navigate(`/user/${auth.username}`)

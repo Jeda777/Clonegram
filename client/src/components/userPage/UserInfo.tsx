@@ -38,6 +38,7 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
           width={['20', null, null, '28']}
           height={['20', null, null, '28']}
           rounded='100%'
+          fit='cover'
         />
         <Flex width={['100%', null, null, 'auto']} flexDirection='column' py={[4, null, null, 0]} gap={2}>
           <Show above='lg'>
