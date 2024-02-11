@@ -58,3 +58,20 @@ export const createFollowRequest = async (req: Request, res: Response) => {
   await prisma.followRequest.create({ data: { followerId: follower.id, userId: user.id } })
   return res.sendStatus(200)
 }
+
+export const removeFollowRequest = async (req: Request, res: Response) => {
+  const requesterUsername = (req as customRequest).username
+  const follower = await prisma.user.findUnique({
+    where: { username: requesterUsername },
+    select: { id: true },
+  })
+  if (!follower) return res.status(404)
+  const { username } = req.params
+  const user = await prisma.user.findUnique({
+    where: { username: username },
+    select: { id: true },
+  })
+  if (!user) return res.status(404)
+  await prisma.followRequest.deleteMany({ where: { followerId: follower.id, userId: user.id } })
+  return res.sendStatus(200)
+}
