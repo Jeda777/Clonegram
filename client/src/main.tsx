@@ -13,6 +13,7 @@ import Layout from './components/Layout.tsx'
 import { store } from './app/store.ts'
 
 import './index.css'
+import UserPage from './pages/UserPage.tsx'
 
 if (import.meta.env.NODE_ENV === 'production') {
   disableReactDevTools()
@@ -40,7 +41,10 @@ const router = createBrowserRouter([
         children: [
           {
             element: <ProtectedRoutes />,
-            children: [{ path: '/', element: <App /> }],
+            children: [
+              { path: '', element: <App /> },
+              { path: '/user/:username', element: <UserPage /> },
+            ],
           },
         ],
       },
