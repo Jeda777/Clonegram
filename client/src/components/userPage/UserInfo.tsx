@@ -1,6 +1,8 @@
 import { Button, Flex, Hide, Image, Show, Text, useDisclosure } from '@chakra-ui/react'
 import { api_user_username_data_user } from '../../../types'
 import EditUserModal from './EditUserModal'
+import useAxiosPrivate from '../../hooks/useAxiosPrivate'
+import { useNavigate } from 'react-router-dom'
 
 interface props {
   userInfo: api_user_username_data_user
@@ -11,6 +13,8 @@ interface props {
 
 const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
   const editModal = useDisclosure({ id: 'editModal' })
+  const axiosPrivate = useAxiosPrivate()
+  const navigate = useNavigate()
 
   const handleMainButton = () => {
     if (isFollowing) {
@@ -22,9 +26,15 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
     } else if (isOwnUser) {
       editModal.onOpen()
     } else {
-      //TODO follow
+      handleFollow()
     }
   }
+
+  const handleFollow = async () => {
+    await axiosPrivate.post(`/protected/follow/${userInfo.username}`)
+    navigate(0)
+  }
+
   const handleConversation = () => {
     //TODO fetch for conversation id
   }
