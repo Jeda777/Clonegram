@@ -1,8 +1,12 @@
 import { axiosPrivate } from '../api/axios'
 import { useEffect } from 'react'
 import useRefreshToken from './useRefreshToken'
-import { AxiosError } from 'axios'
+import { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { useAppSelector } from './useReduxHooks'
+
+interface InternalAxiosRequestConfigWithSent extends InternalAxiosRequestConfig {
+  sent?: boolean
+}
 
 const useAxiosPrivate = () => {
   const refresh = useRefreshToken()
@@ -22,18 +26,14 @@ const useAxiosPrivate = () => {
     const responseInterceptor = axiosPrivate.interceptors.response.use(
       (response) => response,
       async (error: AxiosError) => {
-        const prevRequest = error.config
-        //@ts-ignore
-        if (error.response?.status === 403 && !prevRequest?.sent) {
-          //@ts-ignore
+        const prevRequest: InternalAxiosRequestConfigWithSent | undefined = error.config
+        if (error.response?.status === 401 && !prevRequest?.sent && prevRequest) {
           prevRequest.sent = true
 
           const newAccessToken = await refresh()
 
-          //@ts-ignore
           prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
 
-          //@ts-ignore
           return axiosPrivate(prevRequest)
         }
 

@@ -12,14 +12,14 @@ const handleRefreshToken = async (req: Request, res: Response) => {
   const refreshToken = cookies.jwt
 
   const existingUser = await prisma.user.findFirst({ where: { refreshToken } })
-  if (!existingUser) return res.sendStatus(403)
+  if (!existingUser) return res.sendStatus(401)
 
   if (req.query.getUserInfo === 'true') {
     jwt.verify(
       refreshToken,
       REFRESH_TOKEN_SECRET,
       (error: jwt.VerifyErrors | null, decoded: string | jwt.JwtPayload | undefined) => {
-        if (error || existingUser.username !== (decoded as any).username) return res.sendStatus(403)
+        if (error || existingUser.username !== (decoded as any).username) return res.sendStatus(401)
         const accessToken = jwt.sign({ username: existingUser.username }, ACCESS_TOKEN_SECRET, { expiresIn: '30s' })
         res.json({
           accessToken,
@@ -35,7 +35,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
       refreshToken,
       REFRESH_TOKEN_SECRET,
       (error: jwt.VerifyErrors | null, decoded: string | jwt.JwtPayload | undefined) => {
-        if (error || existingUser.username !== (decoded as any).username) return res.sendStatus(403)
+        if (error || existingUser.username !== (decoded as any).username) return res.sendStatus(401)
         const accessToken = jwt.sign({ username: existingUser.username }, ACCESS_TOKEN_SECRET, { expiresIn: '30s' })
         res.json({ accessToken })
       },

@@ -7,6 +7,8 @@ import { useEffect } from 'react'
 import errorPopup from '../../hooks/useErrorPopup'
 import { getBase64 } from '../../lib/getBase64'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
+import { AxiosError } from 'axios'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const CreatePostTab = () => {
   const tabsState = useAppSelector((state) => state.tabs)
@@ -19,6 +21,8 @@ const CreatePostTab = () => {
 
   const useErrorPopup = errorPopup()
   const axiosPrivate = useAxiosPrivate()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const resolver = z.object({
     image: z.string().includes('data:image/', { message: 'Image not set' }),
@@ -54,7 +58,11 @@ const CreatePostTab = () => {
       await axiosPrivate.post('/protected/posts/createPost', data)
       reset()
     } catch (error) {
-      console.log(error)
+      if ((error as AxiosError).response?.status === 401) {
+        navigate('/sign-in', { state: { from: location }, replace: true })
+      } else {
+        console.log(error)
+      }
     }
   }
 

@@ -94,7 +94,7 @@ export const acceptFollowRequest = async (req: Request, res: Response) => {
   const notification = await prisma.notification.findUnique({ where: { id: notificationId }, include: { receiverUser: true } })
   if (!notification) return res.sendStatus(404)
 
-  if (notification.receiverUser.username !== requesterUsername) return res.sendStatus(401)
+  if (notification.receiverUser.username !== requesterUsername) return res.sendStatus(403)
 
   await prisma.notification.delete({ where: { id: notificationId } })
 
@@ -116,7 +116,7 @@ export const denyFollowRequest = async (req: Request, res: Response) => {
   const notification = await prisma.notification.findUnique({ where: { id: notificationId }, include: { receiverUser: true } })
   if (!notification) return res.sendStatus(404)
 
-  if (notification.receiverUser.username !== requesterUsername) return res.sendStatus(401)
+  if (notification.receiverUser.username !== requesterUsername) return res.sendStatus(403)
 
   await prisma.notification.delete({ where: { id: notificationId } })
 

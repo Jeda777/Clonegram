@@ -3,6 +3,8 @@ import { api_notifications_user, api_notifications_with_user, notificationTypes 
 import { X } from 'lucide-react'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { Dispatch, SetStateAction } from 'react'
+import { AxiosError } from 'axios'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 interface props {
   type: notificationTypes
@@ -13,6 +15,8 @@ interface props {
 
 const NotificationCard = ({ type, sender, notificationId, setNotifications }: props) => {
   const axiosPrivate = useAxiosPrivate()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const removeNotificationFromState = () => {
     setNotifications((state) => {
@@ -22,28 +26,22 @@ const NotificationCard = ({ type, sender, notificationId, setNotifications }: pr
     })
   }
 
-  const handleRemoveNotification = async () => {
+  const handleAction = async (type: 'remove' | 'accept' | 'deny') => {
     try {
-      await axiosPrivate.delete(`/protected/notifications/${notificationId}`)
+      type === 'remove'
+        ? await axiosPrivate.delete(`/protected/notifications/${notificationId}`)
+        : type === 'accept'
+        ? await axiosPrivate.post(`/protected/notifications/accept/${notificationId}`)
+        : type === 'deny'
+        ? await axiosPrivate.delete(`/protected/notifications/deny/${notificationId}`)
+        : console.log('Acton not recognized')
       removeNotificationFromState()
     } catch (error) {
-      console.log(error)
-    }
-  }
-  const handleAcceptRequest = async () => {
-    try {
-      await axiosPrivate.post(`/protected/notifications/accept/${notificationId}`)
-      removeNotificationFromState()
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  const handleDenyRequest = async () => {
-    try {
-      await axiosPrivate.delete(`/protected/notifications/deny/${notificationId}`)
-      removeNotificationFromState()
-    } catch (error) {
-      console.log(error)
+      if ((error as AxiosError).response?.status === 401) {
+        navigate('/sign-in', { state: { from: location }, replace: true })
+      } else {
+        console.log(error)
+      }
     }
   }
 
@@ -66,10 +64,10 @@ const NotificationCard = ({ type, sender, notificationId, setNotifications }: pr
           </Text>
           {type === 'FollowRequest' && (
             <Flex gap={4}>
-              <Button size='xs' colorScheme='green' width='50%' onClick={handleAcceptRequest}>
+              <Button size='xs' colorScheme='green' width='50%' onClick={() => handleAction('accept')}>
                 Accept
               </Button>
-              <Button size='xs' colorScheme='red' width='50%' onClick={handleDenyRequest}>
+              <Button size='xs' colorScheme='red' width='50%' onClick={() => handleAction('deny')}>
                 Deny
               </Button>
             </Flex>
@@ -89,7 +87,7 @@ const NotificationCard = ({ type, sender, notificationId, setNotifications }: pr
           p={0}
           right={0}
           top={0}
-          onClick={handleRemoveNotification}
+          onClick={() => handleAction('remove')}
         />
       )}
     </Card>

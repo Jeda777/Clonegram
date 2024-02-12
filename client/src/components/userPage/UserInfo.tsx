@@ -2,8 +2,9 @@ import { Button, Flex, Hide, Image, Show, Text, useDisclosure } from '@chakra-ui
 import { api_user_username_data_user } from '../../../types'
 import EditUserModal from './EditUserModal'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import UnfollowModal from './UnfollowModal'
+import { AxiosError } from 'axios'
 
 interface props {
   userInfo: api_user_username_data_user
@@ -17,6 +18,7 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
   const unfollowModal = useDisclosure({ id: 'unfollowModal' })
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleMainButton = () => {
     if (isFollowing) {
@@ -24,27 +26,31 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
     } else if (isOwnUser) {
       editModal.onOpen()
     } else if (isRequested) {
-      handleRemoveFollowRequest()
+      handleAction('unrequest')
     } else if (userInfo.private) {
-      handleFollowRequest()
+      handleAction('request')
     } else {
-      handleFollow()
+      handleAction('follow')
     }
   }
 
-  const handleFollowRequest = async () => {
-    await axiosPrivate.post(`/protected/followRequest/${userInfo.username}`)
-    navigate(0)
-  }
-
-  const handleRemoveFollowRequest = async () => {
-    await axiosPrivate.delete(`/protected/unfollowRequest/${userInfo.username}`)
-    navigate(0)
-  }
-
-  const handleFollow = async () => {
-    await axiosPrivate.post(`/protected/follow/${userInfo.username}`)
-    navigate(0)
+  const handleAction = async (type: 'request' | 'unrequest' | 'follow') => {
+    try {
+      type === 'request'
+        ? await axiosPrivate.post(`/protected/followRequest/${userInfo.username}`)
+        : type === 'unrequest'
+        ? await axiosPrivate.delete(`/protected/unfollowRequest/${userInfo.username}`)
+        : type === 'follow'
+        ? await axiosPrivate.post(`/protected/follow/${userInfo.username}`)
+        : console.log('Action not recognized')
+      navigate(0)
+    } catch (error) {
+      if ((error as AxiosError).response?.status === 401) {
+        navigate('/sign-in', { state: { from: location }, replace: true })
+      } else {
+        console.log(error)
+      }
+    }
   }
 
   const handleConversation = () => {

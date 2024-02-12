@@ -1,6 +1,7 @@
 import { Button, Modal, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { AxiosError } from 'axios'
 
 interface props {
   isOpen: boolean
@@ -11,12 +12,22 @@ interface props {
 const UnfollowModal = ({ username, isOpen, onClose }: props) => {
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
+  const location = useLocation()
   let isSubmitting = false
 
   const handleSubmit = async () => {
-    isSubmitting = true
-    await axiosPrivate.delete(`/protected/unfollow/${username}`)
-    navigate(0)
+    try {
+      isSubmitting = true
+      await axiosPrivate.delete(`/protected/unfollow/${username}`)
+      navigate(0)
+    } catch (error) {
+      if ((error as AxiosError).response?.status === 401) {
+        navigate('/sign-in', { state: { from: location }, replace: true })
+      } else {
+        console.log(error)
+        isSubmitting = false
+      }
+    }
   }
 
   return (

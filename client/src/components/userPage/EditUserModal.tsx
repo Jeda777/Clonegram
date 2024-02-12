@@ -15,7 +15,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { AxiosError } from 'axios'
 
 interface props {
   isOpen: boolean
@@ -27,6 +28,7 @@ interface props {
 const EditUserModal = ({ description, isPrivate, isOpen, onClose }: props) => {
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const resolver = z.object({
     description: z.string().nullable(),
@@ -44,10 +46,18 @@ const EditUserModal = ({ description, isPrivate, isOpen, onClose }: props) => {
   })
 
   const onSubmit = async (data: z.infer<typeof resolver>) => {
-    await axiosPrivate.patch('protected/user/updateDescription', data)
-    reset()
-    customOnClose()
-    navigate(0)
+    try {
+      await axiosPrivate.patch('protected/user/updateDescription', data)
+      reset()
+      customOnClose()
+      navigate(0)
+    } catch (error) {
+      if ((error as AxiosError).response?.status === 401) {
+        navigate('/sign-in', { state: { from: location }, replace: true })
+      } else {
+        console.log(error)
+      }
+    }
   }
 
   const customOnClose = () => {

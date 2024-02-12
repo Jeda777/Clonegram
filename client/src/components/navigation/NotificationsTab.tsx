@@ -4,11 +4,15 @@ import { useEffect, useState } from 'react'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { api_notifications_with_user } from '../../../types'
 import NotificationCard from './NotificationCard'
+import { AxiosError } from 'axios'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const NotificationsTab = () => {
   const tabsState = useAppSelector((state) => state.tabs)
   const isOpen = tabsState.isOpen && tabsState.type === 'notifications'
   const axiosPrivate = useAxiosPrivate()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const [notifications, setNotifications] = useState<api_notifications_with_user[] | null>(null)
 
@@ -19,8 +23,16 @@ const NotificationsTab = () => {
 
   useEffect(() => {
     const getNotifications = async () => {
-      const result = await axiosPrivate.get('/protected/notifications')
-      if ((result.data as api_notifications_with_user[]).length > 0) setNotifications(result.data)
+      try {
+        const result = await axiosPrivate.get('/protected/notifications')
+        if ((result.data as api_notifications_with_user[]).length > 0) setNotifications(result.data)
+      } catch (error) {
+        if ((error as AxiosError).response?.status === 401) {
+          navigate('/sign-in', { state: { from: location }, replace: true })
+        } else {
+          console.log(error)
+        }
+      }
     }
 
     if (isOpen) {

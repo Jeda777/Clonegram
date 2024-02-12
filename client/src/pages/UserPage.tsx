@@ -1,5 +1,5 @@
 import { Center } from '@chakra-ui/react'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import Loading from '../components/Loading'
@@ -8,11 +8,13 @@ import UserInfo from '../components/userPage/UserInfo'
 import NotAllowed from '../components/userPage/NotAllowed'
 import NoPosts from '../components/userPage/NoPosts'
 import UserPostsContainer from '../components/userPage/UserPostsContainer'
+import { AxiosError } from 'axios'
 
 const UserPage = () => {
   const { username } = useParams()
   const axiosPrivate = useAxiosPrivate()
   const location = useLocation()
+  const navigate = useNavigate()
 
   const [data, setData] = useState<api_user_username_data | null>(null)
 
@@ -25,7 +27,11 @@ const UserPage = () => {
         const result = await axiosPrivate.get(`/protected/user/getData/${username}`, { signal: controller.signal })
         setData(result.data)
       } catch (error) {
-        console.log(error)
+        if ((error as AxiosError).response?.status === 401) {
+          navigate('/sign-in', { state: { from: location }, replace: true })
+        } else {
+          console.log(error)
+        }
       }
     }
     if (location.pathname.includes('user')) getUser()

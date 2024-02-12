@@ -11,7 +11,7 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
   const token = authHeader.split(' ')[1]
 
   jwt.verify(token, SECRET, (error, decoded) => {
-    if (error) return res.sendStatus(403)
+    if (error) return res.sendStatus(401)
     ;(req as customRequest).username = (decoded as any).username
     next()
   })

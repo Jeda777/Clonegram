@@ -29,7 +29,7 @@ export const handleNotificationsDelete = async (req: Request, res: Response) => 
     include: { receiverUser: true },
   })
   if (!notification) return res.sendStatus(404)
-  if (notification?.receiverUser.username !== username) return res.sendStatus(401)
+  if (notification?.receiverUser.username !== username) return res.sendStatus(403)
 
   await prisma.notification.delete({ where: { id: notificationId } })
 
