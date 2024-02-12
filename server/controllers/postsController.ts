@@ -16,9 +16,9 @@ export const createPost = async (req: Request, res: Response) => {
   const base64Image: string = image.split(';base64,').pop()
   const imageUrl = `assets/posts/${uuidv4()}.png`
   fs.writeFileSync(imageUrl, base64Image, { encoding: 'base64' })
-  const moddifiedImageUrl = `${process.env.BACKEND_URL}/${imageUrl}`
+  const modifiedImageUrl = `${process.env.BACKEND_URL}/${imageUrl}`
 
-  await prisma.post.create({ data: { userId: user?.id, imageUrl: moddifiedImageUrl } })
+  await prisma.post.create({ data: { userId: user?.id, imageUrl: modifiedImageUrl } })
 
   return res.sendStatus(200)
 }

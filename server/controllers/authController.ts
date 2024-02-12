@@ -6,13 +6,13 @@ import jwt from 'jsonwebtoken'
 const prisma = new PrismaClient()
 
 export const registerUser = async (email: string, username: string, password: string, imageUrl: string, res: Response) => {
-  const moddifiedImageUrl = `${process.env.BACKEND_URL}/${imageUrl}`
+  const modifiedImageUrl = `${process.env.BACKEND_URL}/${imageUrl}`
   const encryptedPassword = await bcrypt.hash(password, 10)
 
   const accessToken = jwt.sign({ username: username }, process.env.ACCESS_TOKEN_SECRET as string, { expiresIn: '30s' })
   const refreshToken = jwt.sign({ username: username }, process.env.REFRESH_TOKEN_SECRET as string, { expiresIn: '1d' })
   const newUser = await prisma.user.create({
-    data: { imageUrl: moddifiedImageUrl, username, email, password: encryptedPassword, refreshToken },
+    data: { imageUrl: modifiedImageUrl, username, email, password: encryptedPassword, refreshToken },
   })
 
   res.cookie('jwt', newUser.refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
