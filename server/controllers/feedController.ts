@@ -13,7 +13,11 @@ export const getMyFeed = async (req: Request, res: Response) => {
   if (lastId) {
     const posts = await prisma.post.findMany({
       where: { user: { followers: { some: { follower: { username } } } } },
-      include: { _count: { select: { comments: true, likes: true } } },
+      include: {
+        _count: { select: { comments: true, likes: true } },
+        likes: { select: { userId: true } },
+        user: { select: { imageUrl: true, username: true } },
+      },
       orderBy: { createdAt: 'desc' },
       take: POSTS_TAKE,
       cursor: lastId,
@@ -27,7 +31,11 @@ export const getMyFeed = async (req: Request, res: Response) => {
   } else {
     const posts = await prisma.post.findMany({
       where: { user: { followers: { some: { follower: { username } } } } },
-      include: { _count: { select: { comments: true, likes: true } } },
+      include: {
+        _count: { select: { comments: true, likes: true } },
+        likes: { select: { userId: true } },
+        user: { select: { imageUrl: true, username: true } },
+      },
       orderBy: { createdAt: 'desc' },
       take: POSTS_TAKE,
     })
