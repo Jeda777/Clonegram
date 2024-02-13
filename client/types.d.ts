@@ -55,3 +55,17 @@ export type api_notifications_with_user = {
   receiverUserId: string
   type: notificationTypes
 }
+
+export type api_myFeed_data_post = api_user_username_data_post & {
+  likes: { userId: string }[] | []
+  user: {
+    username: string
+    imageUrl: string
+  }
+}
+
+export type api_myFeed_data = {
+  posts: api_myFeed_data_post[] | []
+  isLast: boolean
+  newLastId: string
+}
