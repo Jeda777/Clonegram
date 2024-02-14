@@ -3,6 +3,7 @@ import { api_myFeed_data_post } from '../../types'
 import { Heart, MessageCircle, Send } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAppSelector } from '../hooks/useReduxHooks'
+import moment from 'moment'
 
 interface props {
   post: api_myFeed_data_post
@@ -35,6 +36,9 @@ const MyFeedPost = ({ post }: props) => {
       >
         <Image alt='Profile picture' src={post.user.imageUrl} width={10} height={10} rounded='100%' />
         <Text fontWeight={600}>{post.user.username}</Text>
+        <Text fontSize='sm' whiteSpace='nowrap'>
+          {moment(post.createdAt).fromNow()}
+        </Text>
       </Flex>
       <Image
         width='100%'

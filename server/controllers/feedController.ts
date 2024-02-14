@@ -4,7 +4,7 @@ import { customRequest } from '../types'
 
 const prisma = new PrismaClient()
 
-const POSTS_TAKE = 1
+const POSTS_TAKE = 5
 
 export const getMyFeed = async (req: Request, res: Response) => {
   const username = (req as customRequest).username

@@ -1,4 +1,4 @@
-import { Flex, GridItem, Image } from '@chakra-ui/react'
+import { Box, Flex, Image } from '@chakra-ui/react'
 import { Heart, MessageCircle } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
@@ -13,7 +13,14 @@ const UserPost = ({ imageUrl, id, commentsCount, likesCount }: props) => {
   const navigate = useNavigate()
 
   return (
-    <GridItem position='relative' onClick={() => navigate(`/post/${id}`)} cursor='pointer'>
+    <Box
+      width={['100%']}
+      maxWidth={['none', null, '240px', '280px']}
+      aspectRatio={1}
+      position='relative'
+      onClick={() => navigate(`/post/${id}`)}
+      cursor='pointer'
+    >
       <Flex
         position='absolute'
         justifyContent='center'
@@ -34,8 +41,8 @@ const UserPost = ({ imageUrl, id, commentsCount, likesCount }: props) => {
           {commentsCount}
         </Flex>
       </Flex>
-      <Image aspectRatio={1} height='60' objectFit='cover' alt='User post' src={imageUrl} />
-    </GridItem>
+      <Image aspectRatio={1} objectFit='cover' alt='User post' src={imageUrl} />
+    </Box>
   )
 }
 
