@@ -65,7 +65,7 @@ export type api_myFeed_data_post = api_user_username_data_post & {
 }
 
 export type api_myFeed_data = {
-  posts: api_myFeed_data_post[] | []
+  posts: api_myFeed_data_post[]
   isLast: boolean
   newLastId: string
 }
