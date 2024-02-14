@@ -4,13 +4,13 @@ import { customRequest } from '../types'
 
 const prisma = new PrismaClient()
 
-const POSTS_TAKE = 5
+const POSTS_TAKE = 1
 
 export const getMyFeed = async (req: Request, res: Response) => {
   const username = (req as customRequest).username
-  const { lastId } = req.body
+  const { lastId } = req.query
 
-  if (lastId) {
+  if (lastId !== '' && lastId !== undefined) {
     const posts = await prisma.post.findMany({
       where: { user: { followers: { some: { follower: { username } } } } },
       include: {
@@ -20,12 +20,16 @@ export const getMyFeed = async (req: Request, res: Response) => {
       },
       orderBy: { createdAt: 'desc' },
       take: POSTS_TAKE,
-      cursor: lastId,
+      cursor: { id: lastId as string },
       skip: 1,
     })
+    const count = await prisma.post.count({
+      where: { user: { followers: { some: { follower: { username } } } } },
+      cursor: { id: lastId as string },
+    })
 
-    const newLastId = posts[posts.length - 1].id
-    const isLast = posts.length < POSTS_TAKE
+    const newLastId = posts.length > 0 ? posts[posts.length - 1].id : ''
+    const isLast = posts.length === count
 
     return res.json({ posts, newLastId, isLast })
   } else {
@@ -39,9 +43,10 @@ export const getMyFeed = async (req: Request, res: Response) => {
       orderBy: { createdAt: 'desc' },
       take: POSTS_TAKE,
     })
+    const count = await prisma.post.count({ where: { user: { followers: { some: { follower: { username } } } } } })
 
-    const newLastId = posts[posts.length - 1].id
-    const isLast = posts.length < POSTS_TAKE
+    const newLastId = posts.length > 0 ? posts[posts.length - 1].id : ''
+    const isLast = posts.length === count
 
     return res.json({ posts, newLastId, isLast })
   }
