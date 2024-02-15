@@ -9,7 +9,7 @@ import {
   removeFollowRequest,
 } from './controllers/followController'
 import { handleNotificationsDelete, handleNotificationsGet } from './controllers/notificationsController'
-import { createPost, getPost, handleLike } from './controllers/postsController'
+import { createComment, createPost, getPost, handleLike } from './controllers/postsController'
 import { getMyFeed } from './controllers/feedController'
 
 const verifiedRouter = express.Router()
@@ -31,6 +31,7 @@ verifiedRouter.delete('/protected/notifications/deny/:notificationId', denyFollo
 
 verifiedRouter.post('/protected/posts/createPost', createPost)
 verifiedRouter.get('/protected/posts/:postId', getPost)
+verifiedRouter.post('/protected/posts/:postId/comment', createComment)
 verifiedRouter.get('/protected/posts/like/:postId', handleLike)
 verifiedRouter.get('/protected/myFeed', getMyFeed)
 

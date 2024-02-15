@@ -61,3 +61,19 @@ export const handleLike = async (req: Request, res: Response) => {
 
   return res.sendStatus(200)
 }
+
+export const createComment = async (req: Request, res: Response) => {
+  const username = (req as customRequest).username
+  const { postId } = req.params
+  const { comment } = req.body
+
+  const user = await prisma.user.findUnique({ where: { username } })
+  if (!user) return res.sendStatus(404)
+
+  const createdComment = await prisma.comment.create({
+    data: { content: comment, postId, userId: user.id },
+    include: { user: { select: { imageUrl: true, username: true } } },
+  })
+
+  return res.json(createdComment)
+}
