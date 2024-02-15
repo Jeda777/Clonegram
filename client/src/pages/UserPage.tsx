@@ -9,6 +9,7 @@ import NotAllowed from '../components/userPage/NotAllowed'
 import NoPosts from '../components/userPage/NoPosts'
 import UserPostsContainer from '../components/userPage/UserPostsContainer'
 import { AxiosError } from 'axios'
+import { Helmet } from 'react-helmet-async'
 
 const UserPage = () => {
   const { username } = useParams()
@@ -43,10 +44,22 @@ const UserPage = () => {
   }, [username, location.pathname])
 
   if (data === null) {
-    return <Loading />
+    return (
+      <>
+        <Helmet>
+          <title>Loading - Clonegram</title>
+          <meta name='description' content={`Clonegram ${username} user page`} />
+        </Helmet>
+        <Loading />
+      </>
+    )
   }
   return (
     <Center flexDirection='column' gap={20}>
+      <Helmet>
+        <title>{username} Page - Clonegram</title>
+        <meta name='description' content={`Clonegram ${username} user page`} />
+      </Helmet>
       <UserInfo isFollowing={data.isFollowing} isOwnUser={data.isOwnUser} isRequested={data.isRequested} userInfo={data.user} />
       {!data.isAllowed ? <NotAllowed /> : data.posts.length === 0 ? <NoPosts /> : <UserPostsContainer posts={data.posts} />}
     </Center>

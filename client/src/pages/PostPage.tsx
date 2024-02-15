@@ -6,12 +6,15 @@ import { AxiosError } from 'axios'
 import Loading from '../components/Loading'
 import { Center, Flex } from '@chakra-ui/react'
 import Post from '../components/post/Post'
+import { Helmet } from 'react-helmet-async'
 
 const PostPage = () => {
   const { postId } = useParams()
   const axiosPrivate = useAxiosPrivate()
   const location = useLocation()
   const navigate = useNavigate()
+
+  //console.log(window.location.href)
 
   const [data, setData] = useState<api_posts_data | null>(null)
 
@@ -43,10 +46,30 @@ const PostPage = () => {
   }, [postId, location.pathname])
 
   if (data === null) {
-    return <Loading />
+    return (
+      <>
+        <Helmet>
+          <title>Loading - Clonegram</title>
+          <meta name='description' content={`Clonegram user post page`} />
+        </Helmet>
+        <Loading />
+      </>
+    )
   }
   return (
     <Center py={[4, null, 16]}>
+      <Helmet>
+        <title>{data.user.username} Post - Clonegram</title>
+        <meta name='description' content={`${data.user.username} Post - Clonegram`} />
+        <meta property='og:locale' content='en_US' />
+        <meta property='og:type' content='website' />
+        <meta property='og:title' content={`Clonegram ${data.user.username} user post page`} />
+        <meta property='og:image' content={data.imageUrl} />
+        <meta content='image/*' property='og:image:type' />
+        <meta property='og:url' content={window.location.href} />
+        <meta property='og:site_name' content='Clonegram' />
+        <meta property='og:description' content={`Clonegram ${data.user.username} user post page`} />
+      </Helmet>
       <Flex maxW='90%' alignItems='center'>
         <Post post={data} />
       </Flex>

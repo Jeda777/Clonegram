@@ -5,6 +5,7 @@ import LoginForm from '../components/authForms/LoginForm'
 import ThemeButton from '../components/ThemeButton'
 import { useAppDispatch, useAppSelector } from '../hooks/useReduxHooks'
 import { setPersist } from '../app/authSlice'
+import { Helmet } from 'react-helmet-async'
 
 const SignInPage = () => {
   const [SignUp, setSignUp] = useState(false)
@@ -21,6 +22,10 @@ const SignInPage = () => {
 
   return (
     <Center w='100vw' h='100vh'>
+      <Helmet>
+        <title>{SignUp ? 'SignUp' : 'SignIn'} Clonegram</title>
+        <meta name='description' content='Clonegram SignIn/SignUp page' />
+      </Helmet>
       <Box>
         <ThemeButton />
       </Box>

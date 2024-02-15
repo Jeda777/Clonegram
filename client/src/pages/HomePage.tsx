@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { api_myFeed_data } from '../../types'
 import MyFeedPost from '../components/feedPost/MyFeedPost'
 import Loading from '../components/Loading'
+import { Helmet } from 'react-helmet-async'
 
 function HomePage() {
   const location = useLocation()
@@ -76,10 +77,22 @@ function HomePage() {
   }, [])
 
   if (isLoading) {
-    return <Loading />
+    return (
+      <>
+        <Helmet>
+          <title>Loading - Clonegram</title>
+          <meta name='description' content='Clonegram user my feed page' />
+        </Helmet>
+        <Loading />
+      </>
+    )
   }
   return (
     <Center pt={[2, null, 16]}>
+      <Helmet>
+        <title>My Feed - Clonegram</title>
+        <meta name='description' content='Clonegram user my feed page' />
+      </Helmet>
       <Flex flexDirection='column' gap={4} width={['90%']} pb={10} alignItems='center'>
         {data.posts.map((p) => (
           <MyFeedPost key={p.id} post={p} />

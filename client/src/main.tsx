@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 import { Provider } from 'react-redux'
+import { HelmetProvider } from 'react-helmet-async'
 
 import ProtectedRoutes from './components/ProtectedRoutes.tsx'
 import PersistLogin from './components/PersistLogin.tsx'
@@ -59,10 +60,12 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <ChakraProvider theme={theme}>
-        <RouterProvider router={router} />
-      </ChakraProvider>
-    </Provider>
+    <HelmetProvider>
+      <Provider store={store}>
+        <ChakraProvider theme={theme}>
+          <RouterProvider router={router} />
+        </ChakraProvider>
+      </Provider>
+    </HelmetProvider>
   </React.StrictMode>,
 )
