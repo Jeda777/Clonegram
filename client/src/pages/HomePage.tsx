@@ -7,7 +7,7 @@ import { api_myFeed_data } from '../../types'
 import MyFeedPost from '../components/feedPost/MyFeedPost'
 import Loading from '../components/Loading'
 
-function App() {
+function HomePage() {
   const location = useLocation()
   const navigate = useNavigate()
   const axiosPrivate = useAxiosPrivate()
@@ -90,4 +90,4 @@ function App() {
   )
 }
 
-export default App
+export default HomePage

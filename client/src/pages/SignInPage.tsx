@@ -6,7 +6,7 @@ import ThemeButton from '../components/ThemeButton'
 import { useAppDispatch, useAppSelector } from '../hooks/useReduxHooks'
 import { setPersist } from '../app/authSlice'
 
-const SignIn = () => {
+const SignInPage = () => {
   const [SignUp, setSignUp] = useState(false)
   const persist = useAppSelector((state) => state.auth.persist)
   const dispatch = useAppDispatch()
@@ -45,4 +45,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn
+export default SignInPage

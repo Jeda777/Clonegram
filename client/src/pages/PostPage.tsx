@@ -46,7 +46,7 @@ const PostPage = () => {
     return <Loading />
   }
   return (
-    <Center pt={[4]}>
+    <Center py={[4, null, 16]}>
       <Flex maxW='90%' alignItems='center'>
         <Post post={data} />
       </Flex>

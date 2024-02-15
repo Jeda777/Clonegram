@@ -5,16 +5,17 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 import { Provider } from 'react-redux'
 
-import App from './pages/App.tsx'
-import SignIn from './pages/Sign-in.tsx'
 import ProtectedRoutes from './components/ProtectedRoutes.tsx'
 import PersistLogin from './components/PersistLogin.tsx'
 import Layout from './components/Layout.tsx'
 import { store } from './app/store.ts'
 
-import './index.css'
 import UserPage from './pages/UserPage.tsx'
 import PostPage from './pages/PostPage.tsx'
+import SignInPage from './pages/SignInPage.tsx'
+import HomePage from './pages/HomePage.tsx'
+
+import './index.css'
 
 if (import.meta.env.NODE_ENV === 'production') {
   disableReactDevTools()
@@ -43,7 +44,7 @@ const router = createBrowserRouter([
           {
             element: <ProtectedRoutes />,
             children: [
-              { path: '', element: <App /> },
+              { path: '', element: <HomePage /> },
               { path: '/user/:username', element: <UserPage /> },
               { path: '/post/:postId', element: <PostPage /> },
             ],
@@ -53,7 +54,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  { path: '/sign-in', element: <SignIn /> },
+  { path: '/sign-in', element: <SignInPage /> },
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

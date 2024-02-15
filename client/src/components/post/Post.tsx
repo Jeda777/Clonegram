@@ -23,9 +23,17 @@ const Post = ({ post }: props) => {
   }
 
   return (
-    <Card width={['100%']} maxWidth='600px' flexDirection='column' gap={2} pb={2} overflow='hidden'>
+    <Card
+      width='100%'
+      maxHeight={[null, null, null, null, '600px']}
+      flexDirection={['column', null, null, null, 'row']}
+      gap={2}
+      pb={[2, null, null, null, 0]}
+      overflow='hidden'
+    >
       <Image
         width='100%'
+        maxWidth='600px'
         aspectRatio={1}
         alt='Post image'
         src={post.imageUrl}
@@ -33,7 +41,7 @@ const Post = ({ post }: props) => {
         cursor='pointer'
         onClick={() => navigate(`/post/${post.id}`)}
       />
-      <Flex flexDirection='column' gap={2} px={2}>
+      <Flex flexDirection='column' gap={2.5} px={2} py={[0, null, null, null, 2]}>
         <Flex
           alignItems='center'
           gap={2}
@@ -65,7 +73,7 @@ const Post = ({ post }: props) => {
             onClick={handleShare}
           />
         </Flex>
-        <CommentsContainer comments={post.comments} />
+        <CommentsContainer comments={post.comments} postId={post.id} />
       </Flex>
     </Card>
   )
