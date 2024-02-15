@@ -1,9 +1,10 @@
 import { Card, Flex, IconButton, Image, Text } from '@chakra-ui/react'
-import { api_myFeed_data_post } from '../../types'
-import { Heart, MessageCircle, Send } from 'lucide-react'
+import { api_myFeed_data_post } from '../../../types'
+import { MessageCircle, Send } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useAppSelector } from '../hooks/useReduxHooks'
+import { useAppSelector } from '../../hooks/useReduxHooks'
 import moment from 'moment'
+import LikeButton from './LikeButton'
 
 interface props {
   post: api_myFeed_data_post
@@ -18,10 +19,6 @@ const MyFeedPost = ({ post }: props) => {
 
   const handleShare = () => {
     //TODO open share modal
-  }
-
-  const handleLike = () => {
-    //TODO like and unlike
   }
 
   return (
@@ -50,10 +47,7 @@ const MyFeedPost = ({ post }: props) => {
         onClick={() => navigate(`/post/${post.id}`)}
       />
       <Flex justifyContent='space-around'>
-        <Flex gap={1} onClick={handleLike} cursor='pointer'>
-          {!isLiked ? <Heart /> : <Heart color='red' fill='red' />}
-          <Text>{post._count.likes}</Text>
-        </Flex>
+        <LikeButton isLiked={isLiked} likeCount={post._count.likes} postId={post.id} />
         <Flex gap={1}>
           <MessageCircle />
           <Text>{post._count.comments}</Text>

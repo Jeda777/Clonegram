@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
 import { useEffect, useRef, useState } from 'react'
 import { api_myFeed_data } from '../../types'
-import MyFeedPost from '../components/Post'
+import MyFeedPost from '../components/feedPost/Post'
 import Loading from '../components/Loading'
 
 function App() {
