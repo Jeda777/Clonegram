@@ -14,6 +14,7 @@ import { store } from './app/store.ts'
 
 import './index.css'
 import UserPage from './pages/UserPage.tsx'
+import PostPage from './pages/PostPage.tsx'
 
 if (import.meta.env.NODE_ENV === 'production') {
   disableReactDevTools()
@@ -44,6 +45,7 @@ const router = createBrowserRouter([
             children: [
               { path: '', element: <App /> },
               { path: '/user/:username', element: <UserPage /> },
+              { path: '/post/:postId', element: <PostPage /> },
             ],
           },
         ],

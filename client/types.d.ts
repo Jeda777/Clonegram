@@ -69,3 +69,17 @@ export type api_myFeed_data = {
   isLast: boolean
   newLastId: string
 }
+
+export type api_posts_data_comment = {
+  id: string
+  postId: string
+  userId: string
+  user: {
+    username: string
+    imageUrl: string
+  }
+  content: string
+  createdAt: Date
+}
+
+export type api_posts_data = api_myFeed_data_post & { comments: api_posts_data_comment[] | [] }

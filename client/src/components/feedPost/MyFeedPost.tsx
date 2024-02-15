@@ -4,7 +4,7 @@ import { MessageCircle, Send } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAppSelector } from '../../hooks/useReduxHooks'
 import moment from 'moment'
-import LikeButton from './LikeButton'
+import LikeButton from '../LikeButton'
 
 interface props {
   post: api_myFeed_data_post

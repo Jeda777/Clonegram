@@ -1,7 +1,7 @@
 import { Flex, Text } from '@chakra-ui/react'
 import { Heart } from 'lucide-react'
 import { useState } from 'react'
-import useAxiosPrivate from '../../hooks/useAxiosPrivate'
+import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import { AxiosError } from 'axios'
 import { useNavigate } from 'react-router-dom'
 
