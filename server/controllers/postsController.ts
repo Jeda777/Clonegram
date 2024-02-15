@@ -23,6 +23,27 @@ export const createPost = async (req: Request, res: Response) => {
   return res.sendStatus(200)
 }
 
+export const getPost = async (req: Request, res: Response) => {
+  const { postId } = req.params
+
+  const post = await prisma.post.findUnique({
+    where: { id: postId },
+    include: {
+      _count: { select: { comments: true, likes: true } },
+      likes: { select: { userId: true } },
+      user: { select: { imageUrl: true, username: true } },
+      comments: {
+        include: { user: { select: { imageUrl: true, username: true } } },
+        orderBy: { createdAt: 'desc' },
+      },
+    },
+  })
+
+  if (!post) return res.sendStatus(404)
+
+  return res.json(post)
+}
+
 export const handleLike = async (req: Request, res: Response) => {
   const username = (req as customRequest).username
   const { postId } = req.params
