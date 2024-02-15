@@ -22,3 +22,21 @@ export const createPost = async (req: Request, res: Response) => {
 
   return res.sendStatus(200)
 }
+
+export const handleLike = async (req: Request, res: Response) => {
+  const username = (req as customRequest).username
+  const { postId } = req.params
+
+  const existingLike = await prisma.like.findFirst({ where: { postId, user: { username } } })
+
+  if (!existingLike) {
+    const user = await prisma.user.findUnique({ where: { username } })
+    if (!user) return res.sendStatus(404)
+    await prisma.like.create({ data: { postId, userId: user.id } })
+    return res.sendStatus(201)
+  }
+
+  await prisma.like.delete({ where: { id: existingLike.id } })
+
+  return res.sendStatus(200)
+}
