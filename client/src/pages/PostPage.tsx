@@ -14,8 +14,6 @@ const PostPage = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  //console.log(window.location.href)
-
   const [data, setData] = useState<api_posts_data | null>(null)
 
   useEffect(() => {

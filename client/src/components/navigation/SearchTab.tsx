@@ -15,7 +15,7 @@ const SearchTab = () => {
       flexDirection='column'
       background={useColorModeValue('white', 'gray.800')}
       zIndex={5}
-      width={['100%', null, 'auto']}
+      width={['100%', null, '456px']}
       pt={[16, null, 14]}
       pb={14}
       px={7}
@@ -23,6 +23,7 @@ const SearchTab = () => {
       left={isOpen ? leftOpen : leftClose}
       top={isOpen ? topOpen : topClose}
       height='100vh'
+      boxShadow={useColorModeValue('2xl', 'dark-lg')}
     >
       <Input />
     </Flex>

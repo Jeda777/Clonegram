@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppSelector } from '../../hooks/useReduxHooks'
 import moment from 'moment'
 import LikeButton from '../LikeButton'
+import { memo } from 'react'
 
 interface props {
   post: api_myFeed_data_post
@@ -68,4 +69,4 @@ const MyFeedPost = ({ post }: props) => {
   )
 }
 
-export default MyFeedPost
+export default memo(MyFeedPost)

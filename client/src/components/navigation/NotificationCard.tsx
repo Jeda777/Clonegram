@@ -46,7 +46,7 @@ const NotificationCard = ({ type, sender, notificationId, setNotifications }: pr
   }
 
   return (
-    <Card variant='outline' flexDirection='row' p={3} maxWidth={96} position='relative'>
+    <Card variant='outline' flexDirection='row' p={3} width='100%' position='relative'>
       <Flex gap={2} width='100%' alignItems='center'>
         <Image width={12} height={12} alt='Profile picture' src={sender.imageUrl} rounded='100%' />
         <Flex flexDirection='column' width='100%' gap={2}>

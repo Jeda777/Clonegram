@@ -71,7 +71,7 @@ const CreatePostTab = () => {
       flexDirection='column'
       background={useColorModeValue('white', 'gray.800')}
       zIndex={5}
-      width={['100%', null, 'auto']}
+      width={['100%', null, '456px']}
       pt={[16, null, 14]}
       pb={14}
       px={7}
@@ -79,6 +79,7 @@ const CreatePostTab = () => {
       left={isOpen ? leftOpen : leftClose}
       top={isOpen ? topOpen : topClose}
       height='100vh'
+      boxShadow={useColorModeValue('2xl', 'dark-lg')}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl display='flex' flexDirection='column' gap={4}>
@@ -97,11 +98,21 @@ const CreatePostTab = () => {
               />
             </>
           ) : (
-            <Image src={watch('image')} width='100%' aspectRatio='1' alt='Profile Picture' objectFit='cover' />
+            <>
+              <Image
+                src={watch('image')}
+                width='100%'
+                maxWidth={[null, null, '400px']}
+                aspectRatio='1'
+                alt='Profile Picture'
+                objectFit='cover'
+              />
+
+              <Button colorScheme='red' type='button' onClick={() => setValue('image', '')}>
+                Remove Image
+              </Button>
+            </>
           )}
-          <Button colorScheme='red' type='button' onClick={() => setValue('image', '')}>
-            Remove Image
-          </Button>
           <Button type='submit' isLoading={isSubmitting}>
             Post
           </Button>

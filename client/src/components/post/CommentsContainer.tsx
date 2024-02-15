@@ -70,7 +70,7 @@ const CommentsContainer = ({ comments, postId }: props) => {
         <Flex
           flexDirection='column'
           mt={2}
-          gap={1.5}
+          gap={3}
           overflow={[null, null, null, null, 'scroll']}
           maxHeight={[null, null, null, null, '444px']}
         >
