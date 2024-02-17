@@ -1,11 +1,12 @@
 import { api_posts_data } from '../../../types'
 import { useNavigate } from 'react-router-dom'
-import { useAppSelector } from '../../hooks/useReduxHooks'
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks'
 import { Card, Flex, IconButton, Image, Text } from '@chakra-ui/react'
 import moment from 'moment'
 import LikeButton from '../LikeButton'
 import { MessageCircle, Send } from 'lucide-react'
 import CommentsContainer from './CommentsContainer'
+import { setShareModalOpen } from '../../app/shareModalSlice'
 
 interface props {
   post: api_posts_data
@@ -14,13 +15,10 @@ interface props {
 const Post = ({ post }: props) => {
   const navigate = useNavigate()
   const auth = useAppSelector((state) => state.auth)
+  const dispatch = useAppDispatch()
 
   const like = post.likes.find((l) => l.userId === auth.id)
   const isLiked = like !== undefined
-
-  const handleShare = () => {
-    //TODO open share modal
-  }
 
   return (
     <Card
@@ -70,7 +68,7 @@ const Post = ({ post }: props) => {
             minWidth={0}
             height='auto'
             _hover={{ background: 'none' }}
-            onClick={handleShare}
+            onClick={() => dispatch(setShareModalOpen({ isOpen: true, postId: post.id }))}
           />
         </Flex>
         <CommentsContainer comments={post.comments} postId={post.id} />

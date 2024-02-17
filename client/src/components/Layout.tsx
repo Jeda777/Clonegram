@@ -6,6 +6,7 @@ import SearchTab from './navigation/SearchTab'
 import DesktopNavLeft from './navigation/desktop/DesktopNavLeft'
 import NotificationsTab from './navigation/NotificationsTab'
 import CreatePostTab from './navigation/CreatePostTab'
+import ShareModal from './ShareModal'
 
 const Layout = () => {
   return (
@@ -20,6 +21,7 @@ const Layout = () => {
       <SearchTab />
       <NotificationsTab />
       <CreatePostTab />
+      <ShareModal />
       <Outlet />
     </Box>
   )

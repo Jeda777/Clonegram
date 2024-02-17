@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authSlice from './authSlice'
 import tabsSlice from './tabsSlice'
+import shareModalSlice from './shareModalSlice'
 
 export const store = configureStore({
   reducer: {
     auth: authSlice,
     tabs: tabsSlice,
+    shareModal: shareModalSlice,
   },
 })
 

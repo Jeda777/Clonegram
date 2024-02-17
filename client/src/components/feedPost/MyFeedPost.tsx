@@ -2,10 +2,11 @@ import { Card, Flex, IconButton, Image, Text } from '@chakra-ui/react'
 import { api_myFeed_data_post } from '../../../types'
 import { MessageCircle, Send } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useAppSelector } from '../../hooks/useReduxHooks'
+import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks'
 import moment from 'moment'
 import LikeButton from '../LikeButton'
 import { memo } from 'react'
+import { setShareModalOpen } from '../../app/shareModalSlice'
 
 interface props {
   post: api_myFeed_data_post
@@ -14,13 +15,10 @@ interface props {
 const MyFeedPost = ({ post }: props) => {
   const navigate = useNavigate()
   const auth = useAppSelector((state) => state.auth)
+  const dispatch = useAppDispatch()
 
   const like = post.likes.find((l) => l.userId === auth.id)
   const isLiked = like !== undefined
-
-  const handleShare = () => {
-    //TODO open share modal
-  }
 
   return (
     <Card width='100%' maxWidth='600px' flexDirection='column' gap={2} py={2}>
@@ -62,7 +60,7 @@ const MyFeedPost = ({ post }: props) => {
           minWidth={0}
           height='auto'
           _hover={{ background: 'none' }}
-          onClick={handleShare}
+          onClick={() => dispatch(setShareModalOpen({ isOpen: true, postId: post.id }))}
         />
       </Flex>
     </Card>
