@@ -47,3 +47,28 @@ export const createConversation = async (req: Request, res: Response) => {
 
   return res.json(conversation.id)
 }
+
+export const getConversations = async (req: Request, res: Response) => {
+  const username = (req as customRequest).username
+
+  const user = await prisma.user.findUnique({
+    where: { username: username },
+  })
+  if (!user) return res.sendStatus(404)
+
+  const conversations = await prisma.conversation.findMany({
+    where: { OR: [{ userId1: user.id }, { userId2: user.id }] },
+    orderBy: { updatedAt: 'desc' },
+    include: {
+      messages: {
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        select: { content: true, sender: { select: { username: true } } },
+      },
+      user1: { select: { username: true, imageUrl: true } },
+      user2: { select: { username: true, imageUrl: true } },
+    },
+  })
+
+  return res.json(conversations)
+}
