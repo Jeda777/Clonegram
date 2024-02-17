@@ -78,3 +78,16 @@ export const handleUserDescriptionAndPrivateUpdate = async (req: Request, res: R
   await prisma.user.update({ where: { username: requesterUsername }, data: { description, private: isPrivate } })
   return res.sendStatus(200)
 }
+
+export const getSearchedUsers = async (req: Request, res: Response) => {
+  const { search } = req.query
+  if (!search) return res.sendStatus(400)
+
+  const users = await prisma.user.findMany({
+    where: { username: { contains: search as string } },
+    take: 5,
+    select: { imageUrl: true, username: true },
+  })
+
+  return res.json(users)
+}
