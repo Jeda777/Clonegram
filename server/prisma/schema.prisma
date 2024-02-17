@@ -30,6 +30,8 @@ model User {
   conversationsInitiated Conversation[] @relation("user1")
   conversationsReceived Conversation[] @relation("user2")
 
+  messages Message[]
+
   following Follow[] @relation("following")
   followers Follow[] @relation("followers")
 
@@ -132,6 +134,8 @@ model Conversation {
   userId2 String
   user2 User @relation("user2", fields: [userId2], references: [id], onDelete: Cascade)
 
+  updatedAt DateTime @updatedAt
+
   messages Message[]
 
   @@index([userId1])
@@ -143,8 +147,11 @@ model Message {
   conversationId String
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   content String @db.Text
+  senderId String
+  sender User @relation(fields: [senderId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
   @@index([conversationId])
+  @@index([senderId])
 }
