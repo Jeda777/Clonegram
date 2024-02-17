@@ -30,6 +30,8 @@ const UserPage = () => {
       } catch (error) {
         if ((error as AxiosError).response?.status === 401) {
           navigate('/sign-in', { state: { from: location }, replace: true })
+        } else if ((error as AxiosError).response?.status === 404) {
+          navigate('/')
         } else {
           console.log(error)
         }
