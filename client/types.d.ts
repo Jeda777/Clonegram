@@ -6,6 +6,11 @@ export type authObject = {
   username: string
 }
 
+export type userBaseData = {
+  username: string
+  imageUrl: string
+}
+
 export type api_user_username_data_user = {
   description: string | null
   id: string
@@ -74,10 +79,7 @@ export type api_posts_data_comment = {
   id: string
   postId: string
   userId: string
-  user: {
-    username: string
-    imageUrl: string
-  }
+  user: userBaseData
   content: string
   createdAt: Date
 }

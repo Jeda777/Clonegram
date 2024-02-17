@@ -21,7 +21,7 @@ const ShareModal = () => {
   const dispatch = useAppDispatch()
 
   const link = window.location.href.includes('post') ? window.location.href : `${window.location.origin}/post/${postId}`
-  console.log(link)
+
   return (
     <Modal isOpen={isOpen} onClose={() => dispatch(setShareModalClose())}>
       <ModalOverlay />

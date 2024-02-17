@@ -1,6 +1,6 @@
 import { Card, Flex, IconButton, Image, Text } from '@chakra-ui/react'
 import { api_myFeed_data_post } from '../../../types'
-import { MessageCircle, Send } from 'lucide-react'
+import { MessageCircle, Share } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks'
 import moment from 'moment'
@@ -53,7 +53,7 @@ const MyFeedPost = ({ post }: props) => {
         </Flex>
         <IconButton
           aria-label='Share'
-          icon={<Send />}
+          icon={<Share />}
           isRound
           p={0}
           variant='ghost'

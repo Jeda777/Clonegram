@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks'
 import { Card, Flex, IconButton, Image, Text } from '@chakra-ui/react'
 import moment from 'moment'
 import LikeButton from '../LikeButton'
-import { MessageCircle, Send } from 'lucide-react'
+import { MessageCircle, Share } from 'lucide-react'
 import CommentsContainer from './CommentsContainer'
 import { setShareModalOpen } from '../../app/shareModalSlice'
 
@@ -61,7 +61,7 @@ const Post = ({ post }: props) => {
           </Flex>
           <IconButton
             aria-label='Share'
-            icon={<Send />}
+            icon={<Share />}
             isRound
             p={0}
             variant='ghost'
