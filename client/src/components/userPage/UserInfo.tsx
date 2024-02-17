@@ -53,8 +53,9 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
     }
   }
 
-  const handleConversation = () => {
-    //TODO fetch for conversation id
+  const handleConversation = async () => {
+    const result = await axiosPrivate('/protected/conversation/find', { params: { username: userInfo.username } })
+    navigate(`/conversations/${result.data}`)
   }
 
   return (
