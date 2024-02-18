@@ -11,7 +11,7 @@ import {
 import { handleNotificationsDelete, handleNotificationsGet } from './controllers/notificationsController'
 import { createComment, createPost, getPost, handleLike } from './controllers/postsController'
 import { getMyFeed } from './controllers/feedController'
-import { findConversation, getConversations } from './controllers/conversationsController'
+import { findConversation, getConversationOtherUser, getConversations, getMessages } from './controllers/conversationsController'
 
 const verifiedRouter = express.Router()
 
@@ -39,5 +39,7 @@ verifiedRouter.get('/protected/myFeed', getMyFeed)
 
 verifiedRouter.get('/protected/conversation/find', findConversation)
 verifiedRouter.get('/protected/conversation/all', getConversations)
+verifiedRouter.get(`/protected/conversation/user`, getConversationOtherUser)
+verifiedRouter.get('/protected/conversation/messages', getMessages)
 
 export default verifiedRouter

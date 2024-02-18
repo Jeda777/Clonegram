@@ -72,3 +72,63 @@ export const getConversations = async (req: Request, res: Response) => {
 
   return res.json(conversations)
 }
+
+export const getConversationOtherUser = async (req: Request, res: Response) => {
+  const username = (req as customRequest).username
+  const { conversationId } = req.query
+
+  const user = await prisma.user.findUnique({
+    where: { username },
+  })
+  if (!user) return res.sendStatus(404)
+
+  if (typeof conversationId !== 'string') return res.sendStatus(400)
+
+  const conversation = await prisma.conversation.findUnique({ where: { id: conversationId } })
+  if (!conversation) return res.status(404)
+  if (conversation.userId1 !== user.id && conversation.userId2 !== user.id) return res.sendStatus(403)
+
+  if (conversation.userId1 !== user.id) {
+    const user = await prisma.user.findUnique({ where: { id: conversation.userId1 }, select: { imageUrl: true, username: true } })
+    return res.json(user)
+  } else {
+    const user = await prisma.user.findUnique({ where: { id: conversation.userId2 }, select: { imageUrl: true, username: true } })
+    return res.json(user)
+  }
+}
+
+const MESSAGES_TAKE = 10
+
+export const getMessages = async (req: Request, res: Response) => {
+  const username = (req as customRequest).username
+  const { conversationId, lastId } = req.query
+
+  if (typeof conversationId !== 'string' || typeof lastId !== 'string') return res.sendStatus(400)
+
+  const user = await prisma.user.findUnique({
+    where: { username },
+  })
+  if (!user) return res.sendStatus(404)
+
+  const conversation = await prisma.conversation.findUnique({ where: { id: conversationId } })
+  if (!conversation) return res.status(404)
+  if (conversation.userId1 !== user.id && conversation.userId2 !== user.id) return res.sendStatus(403)
+
+  if (lastId === '') {
+    const messages = await prisma.message.findMany({
+      where: { conversationId },
+      orderBy: { createdAt: 'desc' },
+      take: MESSAGES_TAKE,
+    })
+    return res.json(messages)
+  } else {
+    const messages = await prisma.message.findMany({
+      where: { conversationId },
+      orderBy: { createdAt: 'desc' },
+      take: MESSAGES_TAKE,
+      cursor: { id: lastId },
+      skip: 1,
+    })
+    return res.json(messages)
+  }
+}
