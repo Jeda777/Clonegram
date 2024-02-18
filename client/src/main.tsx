@@ -18,6 +18,7 @@ import HomePage from './pages/HomePage.tsx'
 
 import './index.css'
 import ConversationsPage from './pages/ConversationsPage.tsx'
+import SingleConversationPage from './pages/SingleConversationPage.tsx'
 
 if (import.meta.env.NODE_ENV === 'production') {
   disableReactDevTools()
@@ -49,7 +50,16 @@ const router = createBrowserRouter([
               { path: '', element: <HomePage /> },
               { path: '/user/:username', element: <UserPage /> },
               { path: '/post/:postId', element: <PostPage /> },
-              { path: '/conversations', element: <ConversationsPage /> },
+              {
+                path: '/conversations',
+                element: <ConversationsPage />,
+                children: [
+                  {
+                    path: ':conversationId',
+                    element: <SingleConversationPage />,
+                  },
+                ],
+              },
             ],
           },
         ],

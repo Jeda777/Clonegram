@@ -37,8 +37,8 @@ const Conversation = ({ username, imageUrl, lastMessage, lastMessageSender, last
       <Image alt='Profile picture' src={imageUrl} width={12} aspectRatio={1} rounded='100%' />
       <Flex flexDirection='column' width='100%'>
         <Text fontWeight='600'>{username}</Text>
-        <Flex width='100%' gap={1}>
-          <Text fontSize='sm' display='flex' alignItems='center' gap={2} width={['100px', '150px']} noOfLines={1}>
+        <Flex width='100%' gap={2} alignItems='center'>
+          <Text fontSize='sm' display='flex' alignItems='center' gap={2} maxWidth={['100px', '150px']} noOfLines={1}>
             {lastMessage}
           </Text>
           {lastMessageSender === 'own' ? (

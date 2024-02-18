@@ -95,3 +95,11 @@ export type api_conversation_all_data = {
   userId1: string
   userId2: string
 }
+
+export type api_conversation_messages_data = {
+  content: string
+  conversationId: string
+  createdAt: Date
+  id: string
+  senderId: string
+}[]
