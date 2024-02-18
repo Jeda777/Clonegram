@@ -85,3 +85,13 @@ export type api_posts_data_comment = {
 }
 
 export type api_posts_data = api_myFeed_data_post & { comments: api_posts_data_comment[] | [] }
+
+export type api_conversation_all_data = {
+  id: strings
+  messages: { content: string; sender: { username: string } }[]
+  updatedAt: Date
+  user1: userBaseData
+  user2: userBaseData
+  userId1: string
+  userId2: string
+}

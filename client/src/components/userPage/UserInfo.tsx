@@ -54,8 +54,16 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
   }
 
   const handleConversation = async () => {
-    const result = await axiosPrivate('/protected/conversation/find', { params: { username: userInfo.username } })
-    navigate(`/conversations/${result.data}`)
+    try {
+      const result = await axiosPrivate('/protected/conversation/find', { params: { username: userInfo.username } })
+      navigate(`/conversations/${result.data}`)
+    } catch (error) {
+      if ((error as AxiosError).response?.status === 401) {
+        navigate('/sign-in', { state: { from: location }, replace: true })
+      } else {
+        console.log(error)
+      }
+    }
   }
 
   return (

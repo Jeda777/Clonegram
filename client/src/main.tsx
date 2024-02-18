@@ -17,6 +17,7 @@ import SignInPage from './pages/SignInPage.tsx'
 import HomePage from './pages/HomePage.tsx'
 
 import './index.css'
+import ConversationsPage from './pages/ConversationsPage.tsx'
 
 if (import.meta.env.NODE_ENV === 'production') {
   disableReactDevTools()
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
               { path: '', element: <HomePage /> },
               { path: '/user/:username', element: <UserPage /> },
               { path: '/post/:postId', element: <PostPage /> },
+              { path: '/conversations', element: <ConversationsPage /> },
             ],
           },
         ],
