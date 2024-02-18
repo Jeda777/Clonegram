@@ -97,9 +97,13 @@ export type api_conversation_all_data = {
 }
 
 export type api_conversation_messages_data = {
-  content: string
-  conversationId: string
-  createdAt: Date
-  id: string
-  senderId: string
-}[]
+  messages: {
+    content: string
+    conversationId: string
+    createdAt: Date
+    id: string
+    senderId: string
+  }[]
+  isLast: boolean
+  lastId: string
+}

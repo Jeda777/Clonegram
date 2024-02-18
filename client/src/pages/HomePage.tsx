@@ -61,7 +61,6 @@ function HomePage() {
       if (rect) {
         const isVisible = rect.top >= 0 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
         if (isVisible && !dataRef.current.isLast && !isFetching) {
-          console.log('tried')
           getData()
         }
       }

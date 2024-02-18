@@ -97,7 +97,7 @@ export const getConversationOtherUser = async (req: Request, res: Response) => {
   }
 }
 
-const MESSAGES_TAKE = 10
+const MESSAGES_TAKE = 30
 
 export const getMessages = async (req: Request, res: Response) => {
   const username = (req as customRequest).username
@@ -120,7 +120,12 @@ export const getMessages = async (req: Request, res: Response) => {
       orderBy: { createdAt: 'desc' },
       take: MESSAGES_TAKE,
     })
-    return res.json(messages)
+
+    const count = await prisma.message.count({ where: { conversationId } })
+    const isLast = count === messages.length
+    const newLastId = messages.length > 0 ? messages[messages.length - 1].id : ''
+
+    return res.json({ messages, isLast, lastId: newLastId })
   } else {
     const messages = await prisma.message.findMany({
       where: { conversationId },
@@ -129,7 +134,12 @@ export const getMessages = async (req: Request, res: Response) => {
       cursor: { id: lastId },
       skip: 1,
     })
-    return res.json(messages)
+
+    const count = await prisma.message.count({ where: { conversationId }, cursor: { id: lastId } })
+    const isLast = count + 1 === messages.length
+    const newLastId = messages.length > 0 ? messages[messages.length - 1].id : ''
+
+    return res.json({ messages, isLast, lastId: newLastId })
   }
 }
 

@@ -56,7 +56,7 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
   const handleConversation = async () => {
     try {
       const result = await axiosPrivate('/protected/conversation/find', { params: { username: userInfo.username } })
-      navigate(`/conversations/${result.data}`)
+      navigate(`/conversations/${result.data}`, { state: { from: location } })
     } catch (error) {
       if ((error as AxiosError).response?.status === 401) {
         navigate('/sign-in', { state: { from: location }, replace: true })
