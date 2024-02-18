@@ -132,3 +132,14 @@ export const getMessages = async (req: Request, res: Response) => {
     return res.json(messages)
   }
 }
+
+export const createMessage = async (req: Request, res: Response) => {
+  const { conversationId, senderId } = req.query
+  const { content } = req.body
+
+  if (typeof conversationId !== 'string' || typeof senderId !== 'string') return res.sendStatus(400)
+
+  await prisma.message.create({ data: { content, conversationId, senderId } })
+
+  res.sendStatus(200)
+}
