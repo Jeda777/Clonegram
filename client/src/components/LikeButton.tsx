@@ -4,6 +4,7 @@ import { useState } from 'react'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import { AxiosError } from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom'
+import useErrorPopup from '../hooks/useErrorPopup'
 
 interface props {
   isLiked: boolean
@@ -16,6 +17,7 @@ const LikeButton = ({ isLiked, likeCount, postId }: props) => {
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
   const location = useLocation()
+  const errorPopup = useErrorPopup()
 
   const handleLike = async () => {
     try {
@@ -34,8 +36,12 @@ const LikeButton = ({ isLiked, likeCount, postId }: props) => {
         }
       })
     } catch (error) {
-      if ((error as AxiosError).response?.status === 401) {
+      const errorStatus = (error as AxiosError).response?.status as number
+      if (errorStatus === 401) {
         navigate('/sign-in', { state: { from: location }, replace: true })
+        errorPopup({ name: 'Session expired' })
+      } else if (errorStatus === 404) {
+        errorPopup({ name: 'Something went wrong' })
       } else {
         console.log(error)
       }

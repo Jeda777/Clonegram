@@ -10,6 +10,7 @@ import { AxiosError } from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import Comment from './Comment'
+import useErrorPopup from '../../hooks/useErrorPopup'
 
 interface props {
   comments: api_posts_data_comment[] | []
@@ -21,6 +22,7 @@ const CommentsContainer = ({ comments, postId }: props) => {
   const navigate = useNavigate()
   const location = useLocation()
   const axiosPrivate = useAxiosPrivate()
+  const errorPopup = useErrorPopup()
 
   const resolver = z.object({
     comment: z.string().min(1),
@@ -42,8 +44,12 @@ const CommentsContainer = ({ comments, postId }: props) => {
       setCommentsData((prev) => [result.data, ...prev])
       reset()
     } catch (error) {
-      if ((error as AxiosError).response?.status === 401) {
+      const errorStatus = (error as AxiosError).response?.status as number
+      if (errorStatus === 401) {
         navigate('/sign-in', { state: { from: location }, replace: true })
+        errorPopup({ name: 'Session expired' })
+      } else if (errorStatus === 404) {
+        errorPopup({ name: 'Something went wrong' })
       } else {
         console.log(error)
       }
