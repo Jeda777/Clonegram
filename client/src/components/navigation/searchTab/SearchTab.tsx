@@ -5,13 +5,19 @@ import useAxiosPrivate from '../../../hooks/useAxiosPrivate'
 import { userBaseData } from '../../../../types'
 import SearchedUser from './SearchedUser'
 import NoUsersFound from './NoUsersFound'
+import { useLocation, useNavigate } from 'react-router-dom'
+import useErrorPopup from '../../../hooks/useErrorPopup'
+import { AxiosError } from 'axios'
 
 const SearchTab = () => {
+  const axiosPrivate = useAxiosPrivate()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const errorPopup = useErrorPopup()
   const tabsState = useAppSelector((state) => state.tabs)
   const isOpen = tabsState.isOpen && tabsState.type === 'search'
   const [searchValue, setSearchValue] = useState('')
   const [users, setUsers] = useState<userBaseData[] | null>(null)
-  const axiosPrivate = useAxiosPrivate()
 
   const leftClose = [0, null, '-100%']
   const leftOpen = [0, null, '208px', '224px', '272px', '336px']
@@ -20,11 +26,23 @@ const SearchTab = () => {
 
   useEffect(() => {
     const getUsers = async () => {
-      const result = await axiosPrivate.get('/protected/user/search', { params: { search: searchValue } })
-      if ((result.data as Array<userBaseData>).length === 0) {
-        users !== null && setUsers(null)
-      } else {
-        setUsers(result.data)
+      try {
+        const result = await axiosPrivate.get('/protected/user/search', { params: { search: searchValue } })
+        if ((result.data as Array<userBaseData>).length === 0) {
+          users !== null && setUsers(null)
+        } else {
+          setUsers(result.data)
+        }
+      } catch (error) {
+        const errorStatus = (error as AxiosError).response?.status as number
+        if (errorStatus === 401) {
+          navigate('/sign-in', { state: { from: location }, replace: true })
+          errorPopup({ name: 'Session expired' })
+        } else if (errorStatus === 400) {
+          errorPopup({ name: 'Something went wrong' })
+        } else {
+          console.log(error)
+        }
       }
     }
 

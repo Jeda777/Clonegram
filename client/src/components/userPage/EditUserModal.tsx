@@ -17,6 +17,7 @@ import { z } from 'zod'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
+import useErrorPopup from '../../hooks/useErrorPopup'
 
 interface props {
   isOpen: boolean
@@ -29,6 +30,7 @@ const EditUserModal = ({ description, isPrivate, isOpen, onClose }: props) => {
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
   const location = useLocation()
+  const errorPopup = useErrorPopup()
 
   const resolver = z.object({
     description: z.string().nullable(),
@@ -52,8 +54,12 @@ const EditUserModal = ({ description, isPrivate, isOpen, onClose }: props) => {
       customOnClose()
       navigate(0)
     } catch (error) {
-      if ((error as AxiosError).response?.status === 401) {
+      const errorStatus = (error as AxiosError).response?.status as number
+      if (errorStatus === 401) {
         navigate('/sign-in', { state: { from: location }, replace: true })
+        errorPopup({ name: 'Session expired' })
+      } else if (errorStatus === 404) {
+        errorPopup({ name: 'Something went wrong' })
       } else {
         console.log(error)
       }
