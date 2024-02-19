@@ -4,12 +4,13 @@ import { customRequest } from '../types'
 
 const prisma = new PrismaClient()
 
-export const handleNotificationsGet = async (req: Request, res: Response) => {
+export const getNotifications = async (req: Request, res: Response) => {
   const username = (req as customRequest).username
   const user = await prisma.user.findUnique({
     where: { username: username },
     select: { id: true },
   })
+  if (!user) return res.sendStatus(404)
 
   const notifications = await prisma.notification.findMany({
     where: { receiverUserId: user?.id },
@@ -20,7 +21,7 @@ export const handleNotificationsGet = async (req: Request, res: Response) => {
   return res.json(notifications)
 }
 
-export const handleNotificationsDelete = async (req: Request, res: Response) => {
+export const deleteNotification = async (req: Request, res: Response) => {
   const username = (req as customRequest).username
   const { notificationId } = req.params
 

@@ -8,7 +8,7 @@ import {
   removeFollow,
   removeFollowRequest,
 } from './controllers/followController'
-import { handleNotificationsDelete, handleNotificationsGet } from './controllers/notificationsController'
+import { deleteNotification, getNotifications } from './controllers/notificationsController'
 import { createComment, createPost, getPost, handleLike } from './controllers/postsController'
 import { getMyFeed } from './controllers/feedController'
 import {
@@ -32,8 +32,8 @@ verifiedRouter.delete('/protected/unfollow/:username', removeFollow)
 verifiedRouter.post('/protected/followRequest/:username', createFollowRequest)
 verifiedRouter.delete('/protected/unfollowRequest/:username', removeFollowRequest)
 
-verifiedRouter.get('/protected/notifications', handleNotificationsGet)
-verifiedRouter.delete('/protected/notifications/:notificationId', handleNotificationsDelete)
+verifiedRouter.get('/protected/notifications', getNotifications)
+verifiedRouter.delete('/protected/notifications/:notificationId', deleteNotification)
 verifiedRouter.post('/protected/notifications/accept/:notificationId', acceptFollowRequest)
 verifiedRouter.delete('/protected/notifications/deny/:notificationId', denyFollowRequest)
 
