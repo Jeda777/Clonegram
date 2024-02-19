@@ -4,11 +4,12 @@ import { customRequest } from '../types'
 
 const prisma = new PrismaClient()
 
-export const handleUserDataGet = async (req: Request, res: Response) => {
+export const getUserData = async (req: Request, res: Response) => {
   const { username } = req.params
   const requesterUsername = (req as customRequest).username
 
   const requester = await prisma.user.findUnique({ where: { username: requesterUsername } })
+  if (!requester) return res.sendStatus(404)
 
   const user = await prisma.user.findUnique({
     where: { username },
@@ -27,10 +28,7 @@ export const handleUserDataGet = async (req: Request, res: Response) => {
       },
     },
   })
-  if (!user) {
-    res.statusMessage = 'User not found'
-    return res.sendStatus(404)
-  }
+  if (!user) return res.sendStatus(404)
 
   const following = await prisma.follow.findFirst({ where: { userId: user.id, followerId: requester?.id } })
   const isFollowing = !following ? false : true
@@ -73,10 +71,14 @@ export const handleUserDataGet = async (req: Request, res: Response) => {
   return res.json(dataWithPosts)
 }
 
-export const handleUserDescriptionAndPrivateUpdate = async (req: Request, res: Response) => {
-  const requesterUsername = (req as customRequest).username
+export const updateUser = async (req: Request, res: Response) => {
+  const username = (req as customRequest).username
+
+  const user = await prisma.user.findUnique({ where: { username } })
+  if (!user) return res.sendStatus(404)
+
   const { description, isPrivate } = req.body
-  await prisma.user.update({ where: { username: requesterUsername }, data: { description, private: isPrivate } })
+  await prisma.user.update({ where: { username }, data: { description, private: isPrivate } })
   return res.sendStatus(200)
 }
 
