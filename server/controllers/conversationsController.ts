@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { Request, Response } from 'express'
 import { customRequest } from '../types'
+import { io } from '../index'
 
 const prisma = new PrismaClient()
 
@@ -149,7 +150,9 @@ export const createMessage = async (req: Request, res: Response) => {
 
   if (typeof conversationId !== 'string' || typeof senderId !== 'string') return res.sendStatus(400)
 
-  await prisma.message.create({ data: { content, conversationId, senderId } })
+  const message = await prisma.message.create({ data: { content, conversationId, senderId } })
+
+  io.emit(`conversation-${conversationId}-newMessage`, message)
 
   res.sendStatus(200)
 }

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useAppSelector } from '../hooks/useReduxHooks'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
-import { api_conversation_messages_data, userBaseData } from '../../types'
+import { api_conversation_messages_data, api_conversation_messages_data_message, userBaseData } from '../../types'
 import { AxiosError } from 'axios'
 import { Flex, Heading, IconButton, Image, useBreakpoint, useColorModeValue } from '@chakra-ui/react'
 import { ChevronLeft } from 'lucide-react'
@@ -16,6 +16,7 @@ const SingleConversationPage = () => {
   const { conversationId } = useParams()
   const axiosPrivate = useAxiosPrivate()
   const auth = useAppSelector((state) => state.auth)
+  const socket = useAppSelector((state) => state.socket)
   const hiddenBreakpoint = ['base', 'sm', 'md', 'lg']
   const breakpoint = useBreakpoint()
   const [userData, setUserData] = useState<userBaseData | null>(null)
@@ -24,6 +25,14 @@ const SingleConversationPage = () => {
   const dataRef = useRef<api_conversation_messages_data>(messages)
   dataRef.current = messages
 
+  socket.socket.on(`conversation-${conversationId}-newMessage`, (message: api_conversation_messages_data_message) => {
+    setMessages({
+      isLast: dataRef.current.isLast,
+      lastId: dataRef.current.lastId,
+      messages: [message, ...dataRef.current.messages],
+    })
+  })
+
   const getMessages = async (controller: AbortController) => {
     try {
       isFetching = true
@@ -31,14 +40,11 @@ const SingleConversationPage = () => {
         signal: controller.signal,
         params: { conversationId, lastId: dataRef.current.lastId },
       })
-      console.log('fetch')
-      console.log(result)
       if (dataRef.current === result.data) {
         return
       } else if (dataRef.current.messages.length === 0) {
         isFetching = false
         setMessages(result.data)
-        console.log(dataRef.current.lastId, dataRef.current.isLast, isFetching)
       } else {
         isFetching = false
         setMessages({
@@ -46,10 +52,8 @@ const SingleConversationPage = () => {
           isLast: result.data.isLast,
           lastId: result.data.lastId,
         })
-        console.log(dataRef.current.lastId, dataRef.current.isLast, isFetching)
       }
     } catch (error) {
-      console.log(error)
       if ((error as AxiosError).response?.status === 401) {
         navigate('/sign-in', { state: { from: location }, replace: true })
       } else if ((error as AxiosError).response?.status === 404) {
@@ -72,7 +76,6 @@ const SingleConversationPage = () => {
         })
         setUserData(result.data)
       } catch (error) {
-        console.log(error)
         if ((error as AxiosError).response?.status === 401) {
           navigate('/sign-in', { state: { from: location }, replace: true })
         } else if ((error as AxiosError).response?.status === 404) {
@@ -99,9 +102,7 @@ const SingleConversationPage = () => {
       const rect = document.getElementById('bottom-div')?.getBoundingClientRect()
       if (rect) {
         const isVisible = rect.bottom >= 0 && rect.top <= (window.innerHeight || document.documentElement.clientHeight)
-        console.log(isVisible)
         if (isVisible && !dataRef.current.isLast && !isFetching) {
-          console.log('tried')
           getMessages(controller)
         }
       }

@@ -24,7 +24,7 @@ app.use(verifiedRouter)
 
 const httpServer = http.createServer(app)
 
-const io = new socketio.Server(httpServer, {
+export const io = new socketio.Server(httpServer, {
   cors: {
     origin: process.env.FRONTEND_URL,
   },
