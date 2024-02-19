@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, User } from '@prisma/client'
 import { Request, Response } from 'express'
 import { customRequest } from '../types'
 import { io } from '../index'
@@ -11,39 +11,29 @@ export const findConversation = async (req: Request, res: Response) => {
 
   const user1 = await prisma.user.findUnique({
     where: { username: requesterUsername },
-    include: { conversationsInitiated: { select: { id: true } }, conversationsReceived: { select: { id: true } } },
   })
   if (!user1) return res.sendStatus(404)
-
-  const user1Conversation = Array.from([...(user1?.conversationsInitiated as []), ...(user1?.conversationsReceived as [])])
 
   const user2 = await prisma.user.findUnique({
     where: { username: username as string },
-    include: { conversationsInitiated: { select: { id: true } }, conversationsReceived: { select: { id: true } } },
   })
   if (!user2) return res.sendStatus(404)
 
-  const user2Conversation = Array.from([...(user2?.conversationsInitiated as []), ...(user2?.conversationsReceived as [])])
+  const existingConversation = await prisma.conversation.findFirst({
+    where: {
+      OR: [
+        { userId1: user1.id, userId2: user2.id },
+        { userId1: user2.id, userId2: user1.id },
+      ],
+    },
+  })
 
-  const matchingConversationId = user1Conversation.filter((c) => {
-    return user2Conversation.indexOf(c) === -1
-  }) as { id: string }[]
+  if (!existingConversation) return createConversation(res, user1, user2)
 
-  if (matchingConversationId.length === 0) return createConversation(req, res)
-
-  return res.json(matchingConversationId[0].id)
+  return res.json(existingConversation.id)
 }
 
-export const createConversation = async (req: Request, res: Response) => {
-  const requesterUsername = (req as customRequest).username
-  const { username } = req.query
-
-  const user1 = await prisma.user.findUnique({ where: { username: requesterUsername } })
-  if (!user1) return res.sendStatus(404)
-
-  const user2 = await prisma.user.findUnique({ where: { username: username as string } })
-  if (!user2) return res.sendStatus(404)
-
+export const createConversation = async (res: Response, user1: User, user2: User) => {
   const conversation = await prisma.conversation.create({ data: { userId1: user1.id, userId2: user2.id } })
 
   return res.json(conversation.id)
@@ -145,12 +135,16 @@ export const getMessages = async (req: Request, res: Response) => {
 }
 
 export const createMessage = async (req: Request, res: Response) => {
-  const { conversationId, senderId } = req.query
+  const username = (req as customRequest).username
+  const { conversationId } = req.query
   const { content } = req.body
 
-  if (typeof conversationId !== 'string' || typeof senderId !== 'string') return res.sendStatus(400)
+  if (typeof conversationId !== 'string') return res.sendStatus(400)
 
-  const message = await prisma.message.create({ data: { content, conversationId, senderId } })
+  const sender = await prisma.user.findUnique({ where: { username } })
+  if (!sender) return res.sendStatus(404)
+
+  const message = await prisma.message.create({ data: { content, conversationId, senderId: sender.id } })
 
   io.emit(`conversation-${conversationId}-newMessage`, message)
 
