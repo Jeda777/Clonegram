@@ -9,11 +9,13 @@ import { Center, Flex, Heading, useBreakpoint } from '@chakra-ui/react'
 import NoConversations from '../components/conversationsPage/NoConversations'
 import Conversation from '../components/conversationsPage/Conversation'
 import { useAppSelector } from '../hooks/useReduxHooks'
+import useErrorPopup from '../hooks/useErrorPopup'
 
 const ConversationsPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const axiosPrivate = useAxiosPrivate()
+  const errorPopup = useErrorPopup()
   const username = useAppSelector((state) => state.auth.username)
   const [data, setData] = useState<api_conversation_all_data[] | null>(null)
   const breakpoint = useBreakpoint()
@@ -29,8 +31,15 @@ const ConversationsPage = () => {
         const result = await axiosPrivate.get('/protected/conversation/all', { signal: controller.signal })
         setData(result.data)
       } catch (error) {
-        if ((error as AxiosError).response?.status === 401) {
+        const errorStatus = (error as AxiosError).response?.status as number
+        if (errorStatus === 401) {
           navigate('/sign-in', { state: { from: location }, replace: true })
+          errorPopup({ name: 'Session expired' })
+        } else if (errorStatus === 404) {
+          navigate('/', { replace: true })
+          errorPopup({ name: 'Something went wrong' })
+        } else if ((error as AxiosError).message === 'canceled') {
+          return
         } else {
           console.log(error)
         }

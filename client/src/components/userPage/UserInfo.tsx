@@ -5,6 +5,7 @@ import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { useLocation, useNavigate } from 'react-router-dom'
 import UnfollowModal from './UnfollowModal'
 import { AxiosError } from 'axios'
+import useErrorPopup from '../../hooks/useErrorPopup'
 
 interface props {
   userInfo: api_user_username_data_user
@@ -19,6 +20,7 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
   const location = useLocation()
+  const errorPopup = useErrorPopup()
 
   const handleMainButton = () => {
     if (isFollowing) {
@@ -58,8 +60,12 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
       const result = await axiosPrivate('/protected/conversation/find', { params: { username: userInfo.username } })
       navigate(`/conversations/${result.data}`, { state: { from: location } })
     } catch (error) {
-      if ((error as AxiosError).response?.status === 401) {
+      const errorStatus = (error as AxiosError).response?.status as number
+      if (errorStatus === 401) {
         navigate('/sign-in', { state: { from: location }, replace: true })
+        errorPopup({ name: 'Session expired' })
+      } else if (errorStatus === 404) {
+        errorPopup({ name: 'Something went wrong' })
       } else {
         console.log(error)
       }

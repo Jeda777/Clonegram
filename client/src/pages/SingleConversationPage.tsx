@@ -8,6 +8,7 @@ import { Flex, Heading, IconButton, Image, useBreakpoint, useColorModeValue } fr
 import { ChevronLeft } from 'lucide-react'
 import Message from '../components/conversationsPage/Message'
 import MessageInput from '../components/conversationsPage/MessageInput'
+import useErrorPopup from '../hooks/useErrorPopup'
 
 const SingleConversationPage = () => {
   const navigate = useNavigate()
@@ -19,6 +20,7 @@ const SingleConversationPage = () => {
   const socket = useAppSelector((state) => state.socket)
   const hiddenBreakpoint = ['base', 'sm', 'md', 'lg']
   const breakpoint = useBreakpoint()
+  const errorPopup = useErrorPopup()
   const [userData, setUserData] = useState<userBaseData | null>(null)
   const [messages, setMessages] = useState<api_conversation_messages_data>({ messages: [], isLast: false, lastId: '' })
   let isFetching = false
@@ -54,10 +56,16 @@ const SingleConversationPage = () => {
         })
       }
     } catch (error) {
-      if ((error as AxiosError).response?.status === 401) {
+      const goBackErrors = [400, 403, 404]
+      const errorStatus = (error as AxiosError).response?.status as number
+      if (errorStatus === 401) {
         navigate('/sign-in', { state: { from: location }, replace: true })
-      } else if ((error as AxiosError).response?.status === 404) {
+        errorPopup({ name: 'Session expired' })
+      } else if (goBackErrors.includes(errorStatus)) {
         navigate('/conversations', { replace: true })
+        errorPopup({ name: 'Something went wrong' })
+      } else if ((error as AxiosError).message === 'canceled') {
+        return
       } else {
         console.log(error)
       }
@@ -76,10 +84,16 @@ const SingleConversationPage = () => {
         })
         setUserData(result.data)
       } catch (error) {
-        if ((error as AxiosError).response?.status === 401) {
+        const goBackErrors = [400, 403, 404]
+        const errorStatus = (error as AxiosError).response?.status as number
+        if (errorStatus === 401) {
           navigate('/sign-in', { state: { from: location }, replace: true })
-        } else if ((error as AxiosError).response?.status === 404) {
+          errorPopup({ name: 'Session expired' })
+        } else if (goBackErrors.includes(errorStatus)) {
           navigate('/conversations', { replace: true })
+          errorPopup({ name: 'Something went wrong' })
+        } else if ((error as AxiosError).message === 'canceled') {
+          return
         } else {
           console.log(error)
         }

@@ -6,17 +6,17 @@ import { z } from 'zod'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { AxiosError } from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useAppSelector } from '../../hooks/useReduxHooks'
+import useErrorPopup from '../../hooks/useErrorPopup'
 
 interface props {
   conversationId: string
 }
 
 const MessageInput = ({ conversationId }: props) => {
-  const auth = useAppSelector((state) => state.auth)
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
   const location = useLocation()
+  const errorPopup = useErrorPopup()
 
   const resolver = z.object({
     content: z.string().min(1),
@@ -34,11 +34,15 @@ const MessageInput = ({ conversationId }: props) => {
 
   const onSubmit = async (data: z.infer<typeof resolver>) => {
     try {
-      await axiosPrivate.post('/protected/conversation/messages/create', data, { params: { conversationId, senderId: auth.id } })
+      await axiosPrivate.post('/protected/conversation/messages/create', data, { params: { conversationId } })
       reset()
     } catch (error) {
-      if ((error as AxiosError).response?.status === 401) {
+      const errorStatus = (error as AxiosError).response?.status as number
+      if (errorStatus === 401) {
         navigate('/sign-in', { state: { from: location }, replace: true })
+        errorPopup({ name: 'Session expired' })
+      } else if ([400, 400].includes(errorStatus)) {
+        errorPopup({ name: 'Something went wrong' })
       } else {
         console.log(error)
       }
