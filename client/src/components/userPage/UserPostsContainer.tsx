@@ -8,7 +8,13 @@ interface props {
 
 const UserPostsContainer = ({ posts }: props) => {
   return (
-    <Flex maxWidth='846px' width='90%' justifyContent={['center', null, null, 'start']} flexWrap='wrap' gap={[4, null, 2]}>
+    <Flex
+      maxWidth={[null, null, '488px', '568px', '856px']}
+      width='90%'
+      justifyContent={['center', null, 'start']}
+      flexWrap='wrap'
+      gap={[4, null, 2]}
+    >
       {posts.map((p) => (
         <UserPost key={p.id} id={p.id} imageUrl={p.imageUrl} commentsCount={p._count.comments} likesCount={p._count.likes} />
       ))}

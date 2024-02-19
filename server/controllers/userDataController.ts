@@ -63,6 +63,7 @@ export const handleUserDataGet = async (req: Request, res: Response) => {
   const posts = await prisma.post.findMany({
     where: { userId: user.id },
     include: { _count: { select: { comments: true, likes: true } } },
+    orderBy: { createdAt: 'desc' },
   })
 
   const dataWithPosts = {

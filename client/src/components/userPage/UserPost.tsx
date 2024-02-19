@@ -14,7 +14,7 @@ const UserPost = ({ imageUrl, id, commentsCount, likesCount }: props) => {
 
   return (
     <Box
-      width={['100%']}
+      width='100%'
       maxWidth={['none', null, '240px', '280px']}
       aspectRatio={1}
       position='relative'
@@ -41,7 +41,7 @@ const UserPost = ({ imageUrl, id, commentsCount, likesCount }: props) => {
           {commentsCount}
         </Flex>
       </Flex>
-      <Image aspectRatio={1} objectFit='cover' alt='User post' src={imageUrl} />
+      <Image aspectRatio={1} objectFit='cover' alt='User post' src={imageUrl} width='100%' />
     </Box>
   )
 }

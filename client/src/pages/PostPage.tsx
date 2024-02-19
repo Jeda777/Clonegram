@@ -68,7 +68,7 @@ const PostPage = () => {
         <meta property='og:site_name' content='Clonegram' />
         <meta property='og:description' content={`Clonegram ${data.user.username} user post page`} />
       </Helmet>
-      <Flex maxW='90%' alignItems='center'>
+      <Flex maxW='883px' width='90%' alignItems='center'>
         <Post post={data} />
       </Flex>
     </Center>

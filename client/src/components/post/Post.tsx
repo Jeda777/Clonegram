@@ -31,7 +31,7 @@ const Post = ({ post }: props) => {
     >
       <Image
         width='100%'
-        maxWidth='600px'
+        maxWidth={[null, null, null, null, '600px']}
         aspectRatio={1}
         alt='Post image'
         src={post.imageUrl}
