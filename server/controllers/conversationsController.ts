@@ -85,7 +85,7 @@ export const getConversationOtherUser = async (req: Request, res: Response) => {
   if (typeof conversationId !== 'string') return res.sendStatus(400)
 
   const conversation = await prisma.conversation.findUnique({ where: { id: conversationId } })
-  if (!conversation) return res.status(404)
+  if (!conversation) return res.sendStatus(404)
   if (conversation.userId1 !== user.id && conversation.userId2 !== user.id) return res.sendStatus(403)
 
   if (conversation.userId1 !== user.id) {
@@ -111,7 +111,7 @@ export const getMessages = async (req: Request, res: Response) => {
   if (!user) return res.sendStatus(404)
 
   const conversation = await prisma.conversation.findUnique({ where: { id: conversationId } })
-  if (!conversation) return res.status(404)
+  if (!conversation) return res.sendStatus(404)
   if (conversation.userId1 !== user.id && conversation.userId2 !== user.id) return res.sendStatus(403)
 
   if (lastId === '') {

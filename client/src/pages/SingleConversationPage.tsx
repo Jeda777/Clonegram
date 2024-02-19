@@ -49,8 +49,11 @@ const SingleConversationPage = () => {
         console.log(dataRef.current.lastId, dataRef.current.isLast, isFetching)
       }
     } catch (error) {
+      console.log(error)
       if ((error as AxiosError).response?.status === 401) {
         navigate('/sign-in', { state: { from: location }, replace: true })
+      } else if ((error as AxiosError).response?.status === 404) {
+        navigate('/conversations', { replace: true })
       } else {
         console.log(error)
       }
@@ -69,8 +72,11 @@ const SingleConversationPage = () => {
         })
         setUserData(result.data)
       } catch (error) {
+        console.log(error)
         if ((error as AxiosError).response?.status === 401) {
           navigate('/sign-in', { state: { from: location }, replace: true })
+        } else if ((error as AxiosError).response?.status === 404) {
+          navigate('/conversations', { replace: true })
         } else {
           console.log(error)
         }
