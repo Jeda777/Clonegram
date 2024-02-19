@@ -47,8 +47,12 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
         : console.log('Action not recognized')
       navigate(0)
     } catch (error) {
-      if ((error as AxiosError).response?.status === 401) {
+      const errorStatus = (error as AxiosError).response?.status as number
+      if (errorStatus === 401) {
         navigate('/sign-in', { state: { from: location }, replace: true })
+        errorPopup({ name: 'Session expired' })
+      } else if (errorStatus === 404) {
+        errorPopup({ name: 'Something went wrong' })
       } else {
         console.log(error)
       }

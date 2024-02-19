@@ -5,6 +5,7 @@ import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { Dispatch, SetStateAction } from 'react'
 import { AxiosError } from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom'
+import useErrorPopup from '../../hooks/useErrorPopup'
 
 interface props {
   type: notificationTypes
@@ -17,6 +18,7 @@ const NotificationCard = ({ type, sender, notificationId, setNotifications }: pr
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
   const location = useLocation()
+  const errorPopup = useErrorPopup()
 
   const removeNotificationFromState = () => {
     setNotifications((state) => {
@@ -37,8 +39,12 @@ const NotificationCard = ({ type, sender, notificationId, setNotifications }: pr
         : console.log('Acton not recognized')
       removeNotificationFromState()
     } catch (error) {
-      if ((error as AxiosError).response?.status === 401) {
+      const errorStatus = (error as AxiosError).response?.status as number
+      if (errorStatus === 401) {
         navigate('/sign-in', { state: { from: location }, replace: true })
+        errorPopup({ name: 'Session expired' })
+      } else if ([403, 404].includes(errorStatus)) {
+        errorPopup({ name: 'Something went wrong' })
       } else {
         console.log(error)
       }

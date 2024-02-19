@@ -6,6 +6,7 @@ import { api_notifications_with_user } from '../../../types'
 import NotificationCard from './NotificationCard'
 import { AxiosError } from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom'
+import useErrorPopup from '../../hooks/useErrorPopup'
 
 const NotificationsTab = () => {
   const tabsState = useAppSelector((state) => state.tabs)
@@ -13,6 +14,7 @@ const NotificationsTab = () => {
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
   const location = useLocation()
+  const errorPopup = useErrorPopup()
 
   const [notifications, setNotifications] = useState<api_notifications_with_user[] | null>(null)
 
@@ -27,8 +29,12 @@ const NotificationsTab = () => {
         const result = await axiosPrivate.get('/protected/notifications')
         if ((result.data as api_notifications_with_user[]).length > 0) setNotifications(result.data)
       } catch (error) {
-        if ((error as AxiosError).response?.status === 401) {
+        const errorStatus = (error as AxiosError).response?.status as number
+        if (errorStatus === 401) {
           navigate('/sign-in', { state: { from: location }, replace: true })
+          errorPopup({ name: 'Session expired' })
+        } else if (errorStatus === 404) {
+          errorPopup({ name: 'Something went wrong' })
         } else {
           console.log(error)
         }

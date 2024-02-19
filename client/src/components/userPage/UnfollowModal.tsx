@@ -2,6 +2,7 @@ import { Button, Modal, ModalContent, ModalFooter, ModalHeader, ModalOverlay } f
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AxiosError } from 'axios'
+import useErrorPopup from '../../hooks/useErrorPopup'
 
 interface props {
   isOpen: boolean
@@ -13,16 +14,24 @@ const UnfollowModal = ({ username, isOpen, onClose }: props) => {
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
   const location = useLocation()
+  const errorPopup = useErrorPopup()
   let isSubmitting = false
 
   const handleSubmit = async () => {
     try {
       isSubmitting = true
       await axiosPrivate.delete(`/protected/unfollow/${username}`)
+      isSubmitting = false
       navigate(0)
     } catch (error) {
-      if ((error as AxiosError).response?.status === 401) {
+      const errorStatus = (error as AxiosError).response?.status as number
+      if (errorStatus === 401) {
         navigate('/sign-in', { state: { from: location }, replace: true })
+        errorPopup({ name: 'Session expired' })
+        isSubmitting = false
+      } else if (errorStatus === 404) {
+        errorPopup({ name: 'Something went wrong' })
+        isSubmitting = false
       } else {
         console.log(error)
         isSubmitting = false
