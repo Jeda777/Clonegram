@@ -7,6 +7,7 @@ import Loading from '../components/Loading'
 import { Center, Flex } from '@chakra-ui/react'
 import Post from '../components/post/Post'
 import { Helmet } from 'react-helmet-async'
+import NotAllowed from '../components/NotAllowed'
 
 const PostPage = () => {
   const { postId } = useParams()
@@ -56,21 +57,39 @@ const PostPage = () => {
   }
   return (
     <Center py={[4, null, 16]}>
-      <Helmet>
-        <title>{data.user.username} Post - Clonegram</title>
-        <meta name='description' content={`${data.user.username} Post - Clonegram`} />
-        <meta property='og:locale' content='en_US' />
-        <meta property='og:type' content='website' />
-        <meta property='og:title' content={`Clonegram ${data.user.username} user post page`} />
-        <meta property='og:image' content={data.imageUrl} />
-        <meta content='image/*' property='og:image:type' />
-        <meta property='og:url' content={window.location.href} />
-        <meta property='og:site_name' content='Clonegram' />
-        <meta property='og:description' content={`Clonegram ${data.user.username} user post page`} />
-      </Helmet>
-      <Flex maxW='883px' width='90%' alignItems='center'>
-        <Post post={data} />
-      </Flex>
+      {data.isAllowed && data.post ? (
+        <>
+          <Helmet>
+            <title>{data.post.user.username} Post - Clonegram</title>
+            <meta name='description' content={`${data.post.user.username} Post - Clonegram`} />
+            <meta property='og:locale' content='en_US' />
+            <meta property='og:type' content='website' />
+            <meta property='og:title' content={`Clonegram ${data.post.user.username} user post page`} />
+            <meta property='og:image' content={data.post.imageUrl} />
+            <meta content='image/*' property='og:image:type' />
+            <meta property='og:url' content={window.location.href} />
+            <meta property='og:site_name' content='Clonegram' />
+            <meta property='og:description' content={`Clonegram ${data.post.user.username} user post page`} />
+          </Helmet>
+          <Flex maxW='883px' width='90%' alignItems='center'>
+            <Post post={data.post} />
+          </Flex>
+        </>
+      ) : (
+        <>
+          <Helmet>
+            <title>Private Post - Clonegram</title>
+            <meta name='description' content='Private Post - Clonegram' />
+            <meta property='og:locale' content='en_US' />
+            <meta property='og:type' content='website' />
+            <meta property='og:title' content='Clonegram private user post page' />
+            <meta property='og:url' content={window.location.href} />
+            <meta property='og:site_name' content='Clonegram' />
+            <meta property='og:description' content='Clonegram private user post page' />
+          </Helmet>
+          <NotAllowed />
+        </>
+      )}
     </Center>
   )
 }

@@ -84,7 +84,12 @@ export type api_posts_data_comment = {
   createdAt: Date
 }
 
-export type api_posts_data = api_myFeed_data_post & { comments: api_posts_data_comment[] | [] }
+export type api_posts_data = {
+  post?: api_myFeed_data_post & { comments: api_posts_data_comment[] | [] }
+  isAllowed: boolean
+}
+
+export type api_posts_data_post = api_myFeed_data_post & { comments: api_posts_data_comment[] | [] }
 
 export type api_conversation_all_data = {
   id: strings

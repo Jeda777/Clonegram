@@ -7,6 +7,7 @@ import { api_myFeed_data } from '../../types'
 import MyFeedPost from '../components/feedPost/MyFeedPost'
 import Loading from '../components/Loading'
 import { Helmet } from 'react-helmet-async'
+import NoFeedPosts from '../components/feedPost/NoFeedPosts'
 
 function HomePage() {
   const location = useLocation()
@@ -92,12 +93,16 @@ function HomePage() {
         <title>My Feed - Clonegram</title>
         <meta name='description' content='Clonegram user my feed page' />
       </Helmet>
-      <Flex flexDirection='column' gap={4} width={['90%']} pb={10} alignItems='center'>
-        {data.posts.map((p) => (
-          <MyFeedPost key={p.id} post={p} />
-        ))}
-        <Flex id='bottom-div'></Flex>
-      </Flex>
+      {data.posts.length === 0 ? (
+        <NoFeedPosts />
+      ) : (
+        <Flex flexDirection='column' gap={4} width={['90%']} pb={10} alignItems='center'>
+          {data.posts.map((p) => (
+            <MyFeedPost key={p.id} post={p} />
+          ))}
+          <Flex id='bottom-div'></Flex>
+        </Flex>
+      )}
     </Center>
   )
 }

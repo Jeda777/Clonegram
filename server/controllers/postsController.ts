@@ -24,6 +24,7 @@ export const createPost = async (req: Request, res: Response) => {
 }
 
 export const getPost = async (req: Request, res: Response) => {
+  const username = (req as customRequest).username
   const { postId } = req.params
 
   const post = await prisma.post.findUnique({
@@ -38,10 +39,24 @@ export const getPost = async (req: Request, res: Response) => {
       },
     },
   })
-
   if (!post) return res.sendStatus(404)
 
-  return res.json(post)
+  const postUser = await prisma.user.findFirst({ where: { posts: { some: { id: post.id } } } })
+  if (!postUser) return res.sendStatus(404)
+
+  if (!postUser.private) {
+    return res.json({ post, isAllowed: true })
+  } else {
+    const user = await prisma.user.findUnique({ where: { username } })
+    if (!user) return res.sendStatus(404)
+
+    const following = await prisma.follow.findFirst({ where: { userId: user.id, followerId: postUser.id } })
+    if (!following) {
+      return res.json({ isAllowed: false })
+    } else {
+      return res.json({ post, isAllowed: true })
+    }
+  }
 }
 
 export const handleLike = async (req: Request, res: Response) => {

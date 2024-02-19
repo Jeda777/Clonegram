@@ -1,4 +1,4 @@
-import { api_posts_data } from '../../../types'
+import { api_posts_data_post } from '../../../types'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks'
 import { Card, Flex, IconButton, Image, Text } from '@chakra-ui/react'
@@ -9,7 +9,7 @@ import CommentsContainer from './CommentsContainer'
 import { setShareModalOpen } from '../../app/shareModalSlice'
 
 interface props {
-  post: api_posts_data
+  post: api_posts_data_post
 }
 
 const Post = ({ post }: props) => {
