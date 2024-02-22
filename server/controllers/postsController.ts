@@ -59,6 +59,23 @@ export const getPost = async (req: Request, res: Response) => {
   }
 }
 
+export const deletePost = async (req: Request, res: Response) => {
+  const username = (req as customRequest).username
+  const { postId } = req.params
+
+  const user = await prisma.user.findUnique({ where: { username } })
+  if (!user) return res.sendStatus(404)
+
+  const existingPost = await prisma.post.findUnique({ where: { id: postId, userId: user.id } })
+  if (!existingPost) return res.sendStatus(404)
+
+  const imageUrl = existingPost.imageUrl.replace((process.env.BACKEND_URL + '/') as string, '')
+  fs.unlinkSync(imageUrl)
+  await prisma.post.delete({ where: { id: postId } })
+
+  return res.sendStatus(200)
+}
+
 export const handleLike = async (req: Request, res: Response) => {
   const username = (req as customRequest).username
   const { postId } = req.params
