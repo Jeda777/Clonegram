@@ -1,12 +1,15 @@
 import { api_posts_data_post } from '../../../types'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../hooks/useReduxHooks'
 import { Card, Flex, IconButton, Image, Text } from '@chakra-ui/react'
 import moment from 'moment'
 import LikeButton from '../LikeButton'
-import { MessageCircle, Share } from 'lucide-react'
+import { MessageCircle, Share, Trash2 } from 'lucide-react'
 import CommentsContainer from './CommentsContainer'
 import { setShareModalOpen } from '../../app/shareModalSlice'
+import useAxiosPrivate from '../../hooks/useAxiosPrivate'
+import { AxiosError } from 'axios'
+import useErrorPopup from '../../hooks/useErrorPopup'
 
 interface props {
   post: api_posts_data_post
@@ -14,11 +17,32 @@ interface props {
 
 const Post = ({ post }: props) => {
   const navigate = useNavigate()
+  const location = useLocation()
   const auth = useAppSelector((state) => state.auth)
   const dispatch = useAppDispatch()
+  const axiosPrivate = useAxiosPrivate()
+  const errorPopup = useErrorPopup()
 
   const like = post.likes.find((l) => l.userId === auth.id)
   const isLiked = like !== undefined
+  const isOwner = post.userId === auth.id
+
+  const handleDelete = async () => {
+    try {
+      await axiosPrivate.delete(`/protected/posts/deletePost/${post.id}`)
+      navigate('/')
+    } catch (error) {
+      const errorStatus = (error as AxiosError).response?.status as number
+      if (errorStatus === 401) {
+        navigate('/sign-in', { state: { from: location }, replace: true })
+        errorPopup({ name: 'Session expired' })
+      } else if (errorStatus === 404) {
+        errorPopup({ name: 'Something went wrong' })
+      } else {
+        console.log(error)
+      }
+    }
+  }
 
   return (
     <Card
@@ -72,6 +96,16 @@ const Post = ({ post }: props) => {
           />
         </Flex>
         <CommentsContainer comments={post.comments} postId={post.id} />
+        {isOwner && (
+          <IconButton
+            aria-label='Delete post'
+            icon={<Trash2 />}
+            colorScheme='red'
+            alignSelf='end'
+            mt='auto'
+            onClick={handleDelete}
+          />
+        )}
       </Flex>
     </Card>
   )

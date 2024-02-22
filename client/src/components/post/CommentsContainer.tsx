@@ -78,7 +78,7 @@ const CommentsContainer = ({ comments, postId }: props) => {
           mt={2}
           gap={3}
           overflow={[null, null, null, null, 'scroll']}
-          maxHeight={[null, null, null, null, '444px']}
+          maxHeight={[null, null, null, null, '394px']}
         >
           {commentsData.map((c) => (
             <Comment key={c.id} comment={c} />
