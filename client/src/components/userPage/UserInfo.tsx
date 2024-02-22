@@ -12,9 +12,10 @@ interface props {
   isFollowing: boolean
   isRequested: boolean
   isOwnUser: boolean
+  getUser: () => Promise<(() => void) | undefined>
 }
 
-const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
+const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser, getUser }: props) => {
   const editModal = useDisclosure({ id: 'editModal' })
   const unfollowModal = useDisclosure({ id: 'unfollowModal' })
   const axiosPrivate = useAxiosPrivate()
@@ -45,7 +46,7 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
         : type === 'follow'
         ? await axiosPrivate.post(`/protected/follow/${userInfo.username}`)
         : console.log('Action not recognized')
-      navigate(0)
+      getUser()
     } catch (error) {
       const errorStatus = (error as AxiosError).response?.status as number
       if (errorStatus === 401) {
@@ -174,13 +175,16 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser }: props) => {
         </Flex>
       </Hide>
 
-      <EditUserModal
-        description={userInfo.description}
-        isPrivate={userInfo.private}
-        isOpen={editModal.isOpen}
-        onClose={editModal.onClose}
-      />
-      <UnfollowModal username={userInfo.username} isOpen={unfollowModal.isOpen} onClose={unfollowModal.onClose} />
+      {editModal.isOpen && (
+        <EditUserModal
+          description={userInfo.description}
+          isPrivate={userInfo.private}
+          isOpen={editModal.isOpen}
+          onClose={editModal.onClose}
+          getUser={getUser}
+        />
+      )}
+      <UnfollowModal username={userInfo.username} isOpen={unfollowModal.isOpen} onClose={unfollowModal.onClose} getUser={getUser} />
     </Flex>
   )
 }

@@ -21,35 +21,36 @@ const UserPage = () => {
 
   const [data, setData] = useState<api_user_username_data | null>(null)
 
-  useEffect(() => {
+  const getUser = async () => {
     let isMounted = true
     const controller = new AbortController()
-
-    const getUser = async () => {
-      try {
-        const result = await axiosPrivate.get(`/protected/user/getData/${username}`, { signal: controller.signal })
-        setData(result.data)
-      } catch (error) {
-        const errorStatus = (error as AxiosError).response?.status as number
-        if (errorStatus === 401) {
-          navigate('/sign-in', { state: { from: location }, replace: true })
-          errorPopup({ name: 'Session expired' })
-        } else if (errorStatus === 404) {
-          navigate('/', { replace: true })
-          errorPopup({ name: 'Something went wrong' })
-        } else if ((error as AxiosError).message === 'canceled') {
-          return
-        } else {
-          console.log(error)
-        }
+    try {
+      const result = await axiosPrivate.get(`/protected/user/getData/${username}`, { signal: controller.signal })
+      setData(result.data)
+      return () => {
+        isMounted = false
+        controller.abort()
+      }
+    } catch (error) {
+      const errorStatus = (error as AxiosError).response?.status as number
+      if (errorStatus === 401) {
+        navigate('/sign-in', { state: { from: location }, replace: true })
+        errorPopup({ name: 'Session expired' })
+      } else if (errorStatus === 404) {
+        navigate('/', { replace: true })
+        errorPopup({ name: 'Something went wrong' })
+      } else {
+        console.log(error)
+      }
+      return () => {
+        isMounted = false
+        controller.abort()
       }
     }
-    getUser()
+  }
 
-    return () => {
-      isMounted = false
-      controller.abort()
-    }
+  useEffect(() => {
+    getUser()
   }, [username])
 
   if (data === null) {
@@ -69,7 +70,13 @@ const UserPage = () => {
         <title>{username} Page - Clonegram</title>
         <meta name='description' content={`Clonegram ${username} user page`} />
       </Helmet>
-      <UserInfo isFollowing={data.isFollowing} isOwnUser={data.isOwnUser} isRequested={data.isRequested} userInfo={data.user} />
+      <UserInfo
+        isFollowing={data.isFollowing}
+        isOwnUser={data.isOwnUser}
+        isRequested={data.isRequested}
+        userInfo={data.user}
+        getUser={getUser}
+      />
       {!data.isAllowed ? <NotAllowed /> : data.posts.length === 0 ? <NoPosts /> : <UserPostsContainer posts={data.posts} />}
     </Center>
   )

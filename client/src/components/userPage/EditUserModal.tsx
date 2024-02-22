@@ -24,9 +24,10 @@ interface props {
   onClose: () => void
   description: string | null
   isPrivate: boolean
+  getUser: () => Promise<(() => void) | undefined>
 }
 
-const EditUserModal = ({ description, isPrivate, isOpen, onClose }: props) => {
+const EditUserModal = ({ description, isPrivate, isOpen, onClose, getUser }: props) => {
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
   const location = useLocation()
@@ -52,7 +53,7 @@ const EditUserModal = ({ description, isPrivate, isOpen, onClose }: props) => {
       await axiosPrivate.patch('protected/user/updateDescription', data)
       reset()
       customOnClose()
-      navigate(0)
+      getUser()
     } catch (error) {
       const errorStatus = (error as AxiosError).response?.status as number
       if (errorStatus === 401) {

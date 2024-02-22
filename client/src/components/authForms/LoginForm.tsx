@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { AxiosError } from 'axios'
-import errorPopup from '../../hooks/useErrorPopup'
+import useErrorPopup from '../../hooks/useErrorPopup'
 import { authObject } from '../../../types'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from '../../api/axios'
@@ -12,7 +12,7 @@ import { setAuthData } from '../../app/authSlice'
 import { useAppDispatch } from '../../hooks/useReduxHooks'
 
 const LoginForm = () => {
-  const useErrorPopup = errorPopup()
+  const errorPopup = useErrorPopup()
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from?.pathname || '/'
@@ -37,10 +37,10 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (errors.email) {
-      useErrorPopup({ name: 'Email invalid', description: errors.email.message })
+      errorPopup({ name: 'Email invalid', description: errors.email.message })
     }
     if (errors.password) {
-      useErrorPopup({ name: 'Password invalid', description: errors.password.message })
+      errorPopup({ name: 'Password invalid', description: errors.password.message })
     }
   }, [errors])
 
@@ -67,13 +67,13 @@ const LoginForm = () => {
       const error = e as AxiosError
       switch (error.response?.statusText) {
         case 'Missing data':
-          useErrorPopup({ name: 'Missing data' })
+          errorPopup({ name: 'Missing data' })
           break
         case 'User with provided email not found':
-          useErrorPopup({ name: `User with that email doesn't exist` })
+          errorPopup({ name: `User with that email doesn't exist` })
           break
         case 'Invalid password':
-          useErrorPopup({ name: 'Incorrect password' })
+          errorPopup({ name: 'Incorrect password' })
           break
         default:
           console.log(error)

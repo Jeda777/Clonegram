@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
-import errorPopup from '../../hooks/useErrorPopup'
+import useErrorPopup from '../../hooks/useErrorPopup'
 import { getBase64 } from '../../lib/getBase64'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { AxiosError } from 'axios'
@@ -19,7 +19,7 @@ const CreatePostTab = () => {
   const topClose = ['-100%', null, 0]
   const topOpen = 0
 
-  const useErrorPopup = errorPopup()
+  const errorPopup = useErrorPopup()
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
   const location = useLocation()
@@ -41,7 +41,7 @@ const CreatePostTab = () => {
 
   useEffect(() => {
     if (errors.image) {
-      useErrorPopup({ name: 'Image invalid', description: errors.image.message })
+      errorPopup({ name: 'Image invalid', description: errors.image.message })
     }
   }, [errors])
 

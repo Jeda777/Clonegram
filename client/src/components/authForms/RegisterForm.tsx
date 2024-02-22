@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { AxiosError } from 'axios'
 import { getBase64 } from '../../lib/getBase64'
 import ProfilePictureForm from './ProfilePictureForm'
-import errorPopup from '../../hooks/useErrorPopup'
+import useErrorPopup from '../../hooks/useErrorPopup'
 import { authObject } from '../../../types'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from '../../api/axios'
@@ -14,7 +14,7 @@ import { setAuthData } from '../../app/authSlice'
 import { useAppDispatch } from '../../hooks/useReduxHooks'
 
 const RegisterForm = () => {
-  const useErrorPopup = errorPopup()
+  const errorPopup = useErrorPopup()
   const navigate = useNavigate()
   const location = useLocation()
   const from = location.state?.from?.pathname || '/'
@@ -45,16 +45,16 @@ const RegisterForm = () => {
 
   useEffect(() => {
     if (errors.image) {
-      useErrorPopup({ name: 'Image invalid', description: errors.image.message })
+      errorPopup({ name: 'Image invalid', description: errors.image.message })
     }
     if (errors.email) {
-      useErrorPopup({ name: 'Email invalid', description: errors.email.message })
+      errorPopup({ name: 'Email invalid', description: errors.email.message })
     }
     if (errors.username) {
-      useErrorPopup({ name: 'Username invalid', description: errors.username.message })
+      errorPopup({ name: 'Username invalid', description: errors.username.message })
     }
     if (errors.password) {
-      useErrorPopup({ name: 'Password invalid', description: errors.password.message })
+      errorPopup({ name: 'Password invalid', description: errors.password.message })
     }
   }, [errors])
 
@@ -87,13 +87,13 @@ const RegisterForm = () => {
       const error = e as AxiosError
       switch (error.response?.statusText) {
         case 'Username in use':
-          useErrorPopup({ name: 'Username in use' })
+          errorPopup({ name: 'Username in use' })
           break
         case 'Email in use':
-          useErrorPopup({ name: 'Email in use' })
+          errorPopup({ name: 'Email in use' })
           break
         case 'Missing data':
-          useErrorPopup({ name: 'Missing data' })
+          errorPopup({ name: 'Missing data' })
           break
         default:
           console.log(error)

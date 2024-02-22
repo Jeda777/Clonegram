@@ -8,9 +8,10 @@ interface props {
   isOpen: boolean
   onClose: () => void
   username: string
+  getUser: () => Promise<(() => void) | undefined>
 }
 
-const UnfollowModal = ({ username, isOpen, onClose }: props) => {
+const UnfollowModal = ({ username, isOpen, onClose, getUser }: props) => {
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
   const location = useLocation()
@@ -22,7 +23,8 @@ const UnfollowModal = ({ username, isOpen, onClose }: props) => {
       isSubmitting = true
       await axiosPrivate.delete(`/protected/unfollow/${username}`)
       isSubmitting = false
-      navigate(0)
+      getUser()
+      onClose()
     } catch (error) {
       const errorStatus = (error as AxiosError).response?.status as number
       if (errorStatus === 401) {
