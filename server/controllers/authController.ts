@@ -1,11 +1,33 @@
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
+import { v4 as uuid } from 'uuid'
+import fs from 'fs'
 
 const prisma = new PrismaClient()
 
-export const registerUser = async (email: string, username: string, password: string, imageUrl: string, res: Response) => {
+export const registerUser = async (req: Request, res: Response) => {
+  const { email, password, username, image } = req.body
+
+  if (!email || !password || !username || !image) {
+    res.statusMessage = 'Missing data'
+    return res.sendStatus(400)
+  }
+  const existingUsername = await prisma.user.findFirst({ where: { username } })
+  if (existingUsername) {
+    res.statusMessage = 'Username in use'
+    return res.sendStatus(409)
+  }
+  const existingEmail = await prisma.user.findFirst({ where: { email } })
+  if (existingEmail) {
+    res.statusMessage = 'Email in use'
+    return res.sendStatus(409)
+  }
+  const base64Image: string = image.split(';base64,').pop()
+  const imageUrl = `assets/profilePictures/${uuid()}.png`
+  fs.writeFileSync(imageUrl, base64Image, { encoding: 'base64' })
+
   const modifiedImageUrl = `${process.env.BACKEND_URL}/${imageUrl}`
   const encryptedPassword = await bcrypt.hash(password, 10)
 
@@ -25,7 +47,14 @@ export const registerUser = async (email: string, username: string, password: st
   })
 }
 
-export const loginUser = async (email: string, password: string, res: Response) => {
+export const loginUser = async (req: Request, res: Response) => {
+  const { email, password } = req.body
+
+  if (!email || !password) {
+    res.statusMessage = 'Missing data'
+    return res.sendStatus(400)
+  }
+
   const existingUser = await prisma.user.findUnique({ where: { email } })
   if (!existingUser) {
     res.statusMessage = 'User with provided email not found'

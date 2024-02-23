@@ -60,14 +60,13 @@ const RegisterForm = () => {
 
   const onSubmit = async (data: z.infer<typeof resolver>) => {
     const postData = {
-      actionType: 'register',
       image: data.image,
       email: data.email,
       password: data.password,
       username: data.username,
     }
     try {
-      const result = await axios.post('/auth', postData, {
+      const result = await axios.post('/register', postData, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })

@@ -45,9 +45,9 @@ const LoginForm = () => {
   }, [errors])
 
   const onSubmit = async (data: z.infer<typeof resolver>) => {
-    const postData = { actionType: 'login', email: data.email, password: data.password }
+    const postData = { email: data.email, password: data.password }
     try {
-      const result = await axios.post('/auth', postData, {
+      const result = await axios.post('/login', postData, {
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true,
       })
