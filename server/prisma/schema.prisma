@@ -26,6 +26,7 @@ model User {
   posts Post[]
   comments Comment[]
   likes Like[]
+  saves Save[]
 
   conversationsInitiated Conversation[] @relation("user1")
   conversationsReceived Conversation[] @relation("user2")
@@ -96,6 +97,7 @@ model Post {
 
   comments Comment[]
   likes Like[]
+  saves Save[]
 
   @@index([userId])
 }
@@ -116,6 +118,19 @@ model Comment {
 
 model Like {
   id String @id @default(uuid())
+  postId String
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([postId])
+  @@index([userId])
+}
+
+model Save {
+    id String @id @default(uuid())
   postId String
   post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   userId String

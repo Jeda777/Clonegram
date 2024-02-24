@@ -37,6 +37,7 @@ export const getPost = async (req: Request, res: Response) => {
         include: { user: { select: { imageUrl: true, username: true } } },
         orderBy: { createdAt: 'desc' },
       },
+      saves: { where: { user: { username } }, select: { id: true } },
     },
   })
   if (!post) return res.sendStatus(404)
@@ -44,12 +45,12 @@ export const getPost = async (req: Request, res: Response) => {
   const postUser = await prisma.user.findFirst({ where: { posts: { some: { id: post.id } } } })
   if (!postUser) return res.sendStatus(404)
 
+  const user = await prisma.user.findUnique({ where: { username } })
+  if (!user) return res.sendStatus(404)
+
   if (!postUser.private) {
     return res.json({ post, isAllowed: true })
   } else {
-    const user = await prisma.user.findUnique({ where: { username } })
-    if (!user) return res.sendStatus(404)
-
     const following = await prisma.follow.findFirst({ where: { userId: user.id, followerId: postUser.id } })
     if (!following) {
       return res.json({ isAllowed: false })
@@ -96,6 +97,26 @@ export const handleLike = async (req: Request, res: Response) => {
   const likeCount = await prisma.like.count({ where: { postId } })
 
   return res.json(likeCount)
+}
+
+export const handleSave = async (req: Request, res: Response) => {
+  const username = (req as customRequest).username
+  const { postId } = req.params
+
+  const existingSave = await prisma.save.findFirst({ where: { postId, user: { username } } })
+
+  if (!existingSave) {
+    const user = await prisma.user.findUnique({ where: { username } })
+    if (!user) return res.sendStatus(404)
+
+    await prisma.save.create({ data: { postId, userId: user.id } })
+
+    return res.sendStatus(201)
+  }
+
+  await prisma.save.delete({ where: { id: existingSave.id } })
+
+  return res.sendStatus(200)
 }
 
 export const createComment = async (req: Request, res: Response) => {

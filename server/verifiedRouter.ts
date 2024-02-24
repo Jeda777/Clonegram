@@ -9,7 +9,7 @@ import {
   removeFollowRequest,
 } from './controllers/followController'
 import { deleteNotification, getNotifications } from './controllers/notificationsController'
-import { createComment, createPost, deletePost, getPost, handleLike } from './controllers/postsController'
+import { createComment, createPost, deletePost, getPost, handleLike, handleSave } from './controllers/postsController'
 import { getMyFeed } from './controllers/feedController'
 import {
   createMessage,
@@ -42,6 +42,7 @@ verifiedRouter.delete('/protected/posts/deletePost/:postId', deletePost)
 verifiedRouter.get('/protected/posts/:postId', getPost)
 verifiedRouter.post('/protected/posts/:postId/comment', createComment)
 verifiedRouter.get('/protected/posts/like/:postId', handleLike)
+verifiedRouter.get('/protected/posts/save/:postId', handleSave)
 verifiedRouter.get('/protected/myFeed', getMyFeed)
 
 verifiedRouter.get('/protected/conversation/find', findConversation)
