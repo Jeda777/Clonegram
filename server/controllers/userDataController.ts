@@ -94,3 +94,18 @@ export const getSearchedUsers = async (req: Request, res: Response) => {
 
   return res.json(users)
 }
+
+export const getSaved = async (req: Request, res: Response) => {
+  const username = (req as customRequest).username
+
+  const user = await prisma.user.findUnique({ where: { username } })
+  if (!user) return res.sendStatus(404)
+
+  const saved = await prisma.save.findMany({
+    where: { userId: user.id },
+    include: { post: { include: { _count: { select: { comments: true, likes: true } } } } },
+    orderBy: { createdAt: 'desc' },
+  })
+
+  return res.json(saved)
+}

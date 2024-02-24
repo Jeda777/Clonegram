@@ -1,5 +1,5 @@
 import express from 'express'
-import { getSearchedUsers, getUserData, updateUser } from './controllers/userDataController'
+import { getSaved, getSearchedUsers, getUserData, updateUser } from './controllers/userDataController'
 import {
   acceptFollowRequest,
   createFollow,
@@ -22,6 +22,7 @@ import {
 const verifiedRouter = express.Router()
 
 verifiedRouter.get('/protected/user/getData/:username', getUserData)
+verifiedRouter.get('/protected/user/saved', getSaved)
 
 verifiedRouter.patch('/protected/user/updateDescription', updateUser)
 verifiedRouter.get('/protected/user/search', getSearchedUsers)
