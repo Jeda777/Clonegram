@@ -28,7 +28,7 @@ const ConversationsPage = () => {
 
     const getData = async () => {
       try {
-        const result = await axiosPrivate.get('/protected/conversation/all', { signal: controller.signal })
+        const result = await axiosPrivate.get('/protected/conversations', { signal: controller.signal })
         setData(result.data)
       } catch (error) {
         const errorStatus = (error as AxiosError).response?.status as number

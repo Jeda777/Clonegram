@@ -20,7 +20,7 @@ const SaveButton = ({ isSaved, postId }: props) => {
 
   const handleSave = async () => {
     try {
-      await axiosPrivate.get(`protected/posts/save/${postId}`)
+      await axiosPrivate.get(`protected/posts/${postId}/save`)
       setIsSavedState((prev) => !prev)
     } catch (error) {
       const errorStatus = (error as AxiosError).response?.status as number

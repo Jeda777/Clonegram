@@ -34,7 +34,7 @@ const MessageInput = ({ conversationId }: props) => {
 
   const onSubmit = async (data: z.infer<typeof resolver>) => {
     try {
-      await axiosPrivate.post('/protected/conversation/messages/create', data, { params: { conversationId } })
+      await axiosPrivate.post(`/protected/conversation/${conversationId}/messages/create`, data)
       reset()
     } catch (error) {
       const errorStatus = (error as AxiosError).response?.status as number

@@ -46,7 +46,7 @@ const UserPage = () => {
     let isMounted = true
     const controller = new AbortController()
     try {
-      const result = await axiosPrivate.get(`/protected/user/getData/${username}`, { signal: controller.signal })
+      const result = await axiosPrivate.get(`/protected/user/${username}/data`, { signal: controller.signal })
       setData(result.data)
       if (result.data.isOwnUser) getSaved()
       return () => {

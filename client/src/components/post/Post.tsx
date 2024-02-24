@@ -30,7 +30,7 @@ const Post = ({ post }: props) => {
 
   const handleDelete = async () => {
     try {
-      await axiosPrivate.delete(`/protected/posts/deletePost/${post.id}`)
+      await axiosPrivate.delete(`/protected/posts/${post.id}/delete`)
       navigate('/')
     } catch (error) {
       const errorStatus = (error as AxiosError).response?.status as number

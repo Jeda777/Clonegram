@@ -27,7 +27,7 @@ const SearchTab = () => {
   useEffect(() => {
     const getUsers = async () => {
       try {
-        const result = await axiosPrivate.get('/protected/user/search', { params: { search: searchValue } })
+        const result = await axiosPrivate.get(`/protected/user/search/${searchValue}`)
         if ((result.data as Array<userBaseData>).length === 0) {
           users !== null && setUsers(null)
         } else {

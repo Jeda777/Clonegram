@@ -31,11 +31,11 @@ const NotificationCard = ({ type, sender, notificationId, setNotifications }: pr
   const handleAction = async (type: 'remove' | 'accept' | 'deny') => {
     try {
       type === 'remove'
-        ? await axiosPrivate.delete(`/protected/notifications/${notificationId}`)
+        ? await axiosPrivate.delete(`/protected/notifications/${notificationId}/delete`)
         : type === 'accept'
-        ? await axiosPrivate.post(`/protected/notifications/accept/${notificationId}`)
+        ? await axiosPrivate.post(`/protected/notifications/${notificationId}/accept`)
         : type === 'deny'
-        ? await axiosPrivate.delete(`/protected/notifications/deny/${notificationId}`)
+        ? await axiosPrivate.delete(`/protected/notifications/${notificationId}/deny`)
         : console.log('Acton not recognized')
       removeNotificationFromState()
     } catch (error) {

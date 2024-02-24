@@ -7,7 +7,7 @@ const prisma = new PrismaClient()
 
 export const findConversation = async (req: Request, res: Response) => {
   const requesterUsername = (req as customRequest).username
-  const { username } = req.query
+  const { username } = req.params
 
   const user1 = await prisma.user.findUnique({
     where: { username: requesterUsername },
@@ -15,7 +15,7 @@ export const findConversation = async (req: Request, res: Response) => {
   if (!user1) return res.sendStatus(404)
 
   const user2 = await prisma.user.findUnique({
-    where: { username: username as string },
+    where: { username: username },
   })
   if (!user2) return res.sendStatus(404)
 
@@ -66,14 +66,12 @@ export const getConversations = async (req: Request, res: Response) => {
 
 export const getConversationOtherUser = async (req: Request, res: Response) => {
   const username = (req as customRequest).username
-  const { conversationId } = req.query
+  const { conversationId } = req.params
 
   const user = await prisma.user.findUnique({
     where: { username },
   })
   if (!user) return res.sendStatus(404)
-
-  if (typeof conversationId !== 'string') return res.sendStatus(400)
 
   const conversation = await prisma.conversation.findUnique({ where: { id: conversationId } })
   if (!conversation) return res.sendStatus(404)
@@ -92,9 +90,10 @@ const MESSAGES_TAKE = 30
 
 export const getMessages = async (req: Request, res: Response) => {
   const username = (req as customRequest).username
-  const { conversationId, lastId } = req.query
+  const { conversationId } = req.params
+  const { lastId } = req.query
 
-  if (typeof conversationId !== 'string' || typeof lastId !== 'string') return res.sendStatus(400)
+  if (!conversationId || typeof lastId !== 'string') return res.sendStatus(400)
 
   const user = await prisma.user.findUnique({
     where: { username },
@@ -136,10 +135,10 @@ export const getMessages = async (req: Request, res: Response) => {
 
 export const createMessage = async (req: Request, res: Response) => {
   const username = (req as customRequest).username
-  const { conversationId } = req.query
+  const { conversationId } = req.params
   const { content } = req.body
 
-  if (typeof conversationId !== 'string') return res.sendStatus(400)
+  if (!conversationId) return res.sendStatus(400)
 
   const sender = await prisma.user.findUnique({ where: { username } })
   if (!sender) return res.sendStatus(404)

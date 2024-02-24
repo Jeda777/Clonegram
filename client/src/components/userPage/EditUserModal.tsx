@@ -50,7 +50,7 @@ const EditUserModal = ({ description, isPrivate, isOpen, onClose, getUser }: pro
 
   const onSubmit = async (data: z.infer<typeof resolver>) => {
     try {
-      await axiosPrivate.patch('protected/user/updateDescription', data)
+      await axiosPrivate.patch('/protected/user', data)
       reset()
       customOnClose()
       getUser()

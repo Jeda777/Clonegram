@@ -62,7 +62,7 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser, getUser }: pr
 
   const handleConversation = async () => {
     try {
-      const result = await axiosPrivate('/protected/conversation/find', { params: { username: userInfo.username } })
+      const result = await axiosPrivate(`/protected/conversations/find/${userInfo.username}`)
       navigate(`/conversations/${result.data}`, { state: { from: location } })
     } catch (error) {
       const errorStatus = (error as AxiosError).response?.status as number

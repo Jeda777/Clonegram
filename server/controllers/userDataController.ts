@@ -83,11 +83,11 @@ export const updateUser = async (req: Request, res: Response) => {
 }
 
 export const getSearchedUsers = async (req: Request, res: Response) => {
-  const { search } = req.query
+  const { search } = req.params
   if (!search) return res.sendStatus(400)
 
   const users = await prisma.user.findMany({
-    where: { username: { contains: search as string } },
+    where: { username: { contains: search } },
     take: 5,
     select: { imageUrl: true, username: true },
   })

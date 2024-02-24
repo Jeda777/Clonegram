@@ -21,11 +21,11 @@ import {
 
 const verifiedRouter = express.Router()
 
-verifiedRouter.get('/protected/user/getData/:username', getUserData)
+verifiedRouter.get('/protected/user/:username/data', getUserData)
 verifiedRouter.get('/protected/user/saved', getSaved)
+verifiedRouter.patch('/protected/user', updateUser)
 
-verifiedRouter.patch('/protected/user/updateDescription', updateUser)
-verifiedRouter.get('/protected/user/search', getSearchedUsers)
+verifiedRouter.get('/protected/user/search/:search', getSearchedUsers)
 
 verifiedRouter.post('/protected/follow/:username', createFollow)
 verifiedRouter.delete('/protected/unfollow/:username', removeFollow)
@@ -34,22 +34,24 @@ verifiedRouter.post('/protected/followRequest/:username', createFollowRequest)
 verifiedRouter.delete('/protected/unfollowRequest/:username', removeFollowRequest)
 
 verifiedRouter.get('/protected/notifications', getNotifications)
-verifiedRouter.delete('/protected/notifications/:notificationId', deleteNotification)
-verifiedRouter.post('/protected/notifications/accept/:notificationId', acceptFollowRequest)
-verifiedRouter.delete('/protected/notifications/deny/:notificationId', denyFollowRequest)
+verifiedRouter.delete('/protected/notifications/:notificationId/delete', deleteNotification)
+verifiedRouter.post('/protected/notifications/:notificationId/accept', acceptFollowRequest)
+verifiedRouter.delete('/protected/notifications/:notificationId/deny', denyFollowRequest)
 
 verifiedRouter.post('/protected/posts/createPost', createPost)
-verifiedRouter.delete('/protected/posts/deletePost/:postId', deletePost)
 verifiedRouter.get('/protected/posts/:postId', getPost)
+verifiedRouter.delete('/protected/posts/:postId/delete', deletePost)
 verifiedRouter.post('/protected/posts/:postId/comment', createComment)
-verifiedRouter.get('/protected/posts/like/:postId', handleLike)
-verifiedRouter.get('/protected/posts/save/:postId', handleSave)
+verifiedRouter.get('/protected/posts/:postId/like', handleLike)
+verifiedRouter.get('/protected/posts/:postId/save', handleSave)
+
 verifiedRouter.get('/protected/myFeed', getMyFeed)
 
-verifiedRouter.get('/protected/conversation/find', findConversation)
-verifiedRouter.get('/protected/conversation/all', getConversations)
-verifiedRouter.get(`/protected/conversation/user`, getConversationOtherUser)
-verifiedRouter.get('/protected/conversation/messages', getMessages)
-verifiedRouter.post('/protected/conversation/messages/create', createMessage)
+verifiedRouter.get('/protected/conversations/find/:username', findConversation)
+verifiedRouter.get('/protected/conversations', getConversations)
+
+verifiedRouter.get('/protected/conversation/:conversationId/user', getConversationOtherUser)
+verifiedRouter.get('/protected/conversation/:conversationId/messages', getMessages)
+verifiedRouter.post('/protected/conversation/:conversationId/messages/create', createMessage)
 
 export default verifiedRouter

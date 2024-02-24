@@ -38,9 +38,9 @@ const SingleConversationPage = () => {
   const getMessages = async (controller: AbortController) => {
     try {
       isFetching = true
-      const result = await axiosPrivate.get('/protected/conversation/messages', {
+      const result = await axiosPrivate.get(`/protected/conversation/${conversationId}/messages`, {
         signal: controller.signal,
-        params: { conversationId, lastId: dataRef.current.lastId },
+        params: { lastId: dataRef.current.lastId },
       })
       if (dataRef.current === result.data) {
         return
@@ -78,9 +78,8 @@ const SingleConversationPage = () => {
 
     const getUserData = async () => {
       try {
-        const result = await axiosPrivate.get('/protected/conversation/user', {
+        const result = await axiosPrivate.get(`/protected/conversation/${conversationId}/user`, {
           signal: controller.signal,
-          params: { conversationId },
         })
         setUserData(result.data)
       } catch (error) {
