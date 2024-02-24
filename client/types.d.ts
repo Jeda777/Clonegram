@@ -44,6 +44,14 @@ export type api_user_username_data = {
   isAllowed: boolean
 }
 
+export type api_user_saved_data = {
+  id: string
+  postId: string
+  post: api_user_username_data_post
+  userId: string
+  createdAt: Date
+}
+
 export type notificationTypes = 'FollowRequest' | 'Like' | 'Comment' | 'Follow'
 
 export type api_notifications_user = {
