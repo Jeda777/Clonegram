@@ -7,6 +7,7 @@ import moment from 'moment'
 import LikeButton from '../LikeButton'
 import { memo } from 'react'
 import { setShareModalOpen } from '../../app/shareModalSlice'
+import SaveButton from '../SaveButton'
 
 interface props {
   post: api_myFeed_data_post
@@ -62,6 +63,7 @@ const MyFeedPost = ({ post }: props) => {
           _hover={{ background: 'none' }}
           onClick={() => dispatch(setShareModalOpen({ isOpen: true, postId: post.id }))}
         />
+        <SaveButton isSaved={post.saves.length === 0 ? false : true} postId={post.id} />
       </Flex>
     </Card>
   )

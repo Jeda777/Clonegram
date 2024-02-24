@@ -10,6 +10,7 @@ import { setShareModalOpen } from '../../app/shareModalSlice'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import { AxiosError } from 'axios'
 import useErrorPopup from '../../hooks/useErrorPopup'
+import SaveButton from '../SaveButton'
 
 interface props {
   post: api_posts_data_post
@@ -94,6 +95,7 @@ const Post = ({ post }: props) => {
             _hover={{ background: 'none' }}
             onClick={() => dispatch(setShareModalOpen({ isOpen: true, postId: post.id }))}
           />
+          <SaveButton isSaved={post.saves.length === 0 ? false : true} postId={post.id} />
         </Flex>
         <CommentsContainer comments={post.comments} postId={post.id} />
         {isOwner && (

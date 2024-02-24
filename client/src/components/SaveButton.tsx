@@ -1,28 +1,27 @@
-import { Flex, Text } from '@chakra-ui/react'
-import { Heart } from 'lucide-react'
 import { useState } from 'react'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
-import { AxiosError } from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useErrorPopup from '../hooks/useErrorPopup'
+import { AxiosError } from 'axios'
+import { Flex } from '@chakra-ui/react'
+import { Bookmark } from 'lucide-react'
 
 interface props {
-  isLiked: boolean
-  likeCount: number
+  isSaved: boolean
   postId: string
 }
 
-const LikeButton = ({ isLiked, likeCount, postId }: props) => {
-  const [likeData, setLikeData] = useState({ isLiked, likeCount })
+const SaveButton = ({ isSaved, postId }: props) => {
+  const [isSavedState, setIsSavedState] = useState(isSaved)
   const axiosPrivate = useAxiosPrivate()
   const navigate = useNavigate()
   const location = useLocation()
   const errorPopup = useErrorPopup()
 
-  const handleLike = async () => {
+  const handleSave = async () => {
     try {
-      const newLikeCount = await axiosPrivate.get(`protected/posts/like/${postId}`)
-      setLikeData((prev) => ({ isLiked: !prev.isLiked, likeCount: newLikeCount.data }))
+      await axiosPrivate.get(`protected/posts/save/${postId}`)
+      setIsSavedState((prev) => !prev)
     } catch (error) {
       const errorStatus = (error as AxiosError).response?.status as number
       if (errorStatus === 401) {
@@ -37,11 +36,10 @@ const LikeButton = ({ isLiked, likeCount, postId }: props) => {
   }
 
   return (
-    <Flex gap={1} onClick={handleLike} cursor='pointer'>
-      {!likeData.isLiked ? <Heart /> : <Heart color='red' fill='red' />}
-      <Text>{likeData.likeCount}</Text>
+    <Flex onClick={handleSave} cursor='pointer'>
+      {!isSavedState ? <Bookmark /> : <Bookmark color='white' fill='white' />}
     </Flex>
   )
 }
 
-export default LikeButton
+export default SaveButton

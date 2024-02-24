@@ -67,6 +67,7 @@ export type api_myFeed_data_post = api_user_username_data_post & {
     username: string
     imageUrl: string
   }
+  saves: { id: string }[]
 }
 
 export type api_myFeed_data = {
@@ -85,7 +86,7 @@ export type api_posts_data_comment = {
 }
 
 export type api_posts_data = {
-  post?: api_myFeed_data_post & { comments: api_posts_data_comment[] | [] }
+  post?: api_posts_data_post
   isAllowed: boolean
 }
 
