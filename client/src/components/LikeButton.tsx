@@ -21,20 +21,9 @@ const LikeButton = ({ isLiked, likeCount, postId }: props) => {
 
   const handleLike = async () => {
     try {
-      await axiosPrivate.get(`protected/posts/like/${postId}`)
-      setLikeData((prev) => {
-        if (prev.isLiked) {
-          return {
-            isLiked: false,
-            likeCount: prev.likeCount - 1,
-          }
-        } else {
-          return {
-            isLiked: true,
-            likeCount: prev.likeCount + 1,
-          }
-        }
-      })
+      const newLikeCount = await axiosPrivate.get(`protected/posts/like/${postId}`)
+      console.log(newLikeCount.data)
+      setLikeData((prev) => ({ isLiked: !prev.isLiked, likeCount: newLikeCount.data }))
     } catch (error) {
       const errorStatus = (error as AxiosError).response?.status as number
       if (errorStatus === 401) {

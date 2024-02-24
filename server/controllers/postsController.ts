@@ -85,13 +85,17 @@ export const handleLike = async (req: Request, res: Response) => {
   if (!existingLike) {
     const user = await prisma.user.findUnique({ where: { username } })
     if (!user) return res.sendStatus(404)
+
     await prisma.like.create({ data: { postId, userId: user.id } })
-    return res.sendStatus(201)
+    const likeCount = await prisma.like.count({ where: { postId } })
+
+    return res.json(likeCount)
   }
 
   await prisma.like.delete({ where: { id: existingLike.id } })
+  const likeCount = await prisma.like.count({ where: { postId } })
 
-  return res.sendStatus(200)
+  return res.json(likeCount)
 }
 
 export const createComment = async (req: Request, res: Response) => {
