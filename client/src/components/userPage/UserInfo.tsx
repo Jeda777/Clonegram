@@ -121,15 +121,15 @@ const UserInfo = ({ userInfo, isFollowing, isRequested, isOwnUser, getUser }: pr
             <Hide above='lg'>
               <Flex flexDirection='column' alignItems='center'>
                 <Text fontWeight='600'>{userInfo._count.posts}</Text>
-                <Text>Posts</Text>
+                <Text fontSize={['sm', 'base']}>Posts</Text>
               </Flex>
               <Flex flexDirection='column' alignItems='center'>
                 <Text fontWeight='600'>{userInfo._count.followers}</Text>
-                <Text>Followers</Text>
+                <Text fontSize={['sm', 'base']}>Followers</Text>
               </Flex>
               <Flex flexDirection='column' alignItems='center'>
                 <Text fontWeight='600'>{userInfo._count.following}</Text>
-                <Text>Following</Text>
+                <Text fontSize={['sm', 'base']}>Following</Text>
               </Flex>
             </Hide>
             <Show above='lg'>

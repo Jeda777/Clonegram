@@ -75,7 +75,7 @@ const ConversationsPage = () => {
           </Helmet>
           <Flex hidden={hidden} flexDirection='column' gap={4} width='100%' maxWidth='440px' alignItems='center'>
             <Heading>Conversations</Heading>
-            <Flex flexDirection='column' gap={2} width='90%' alignItems='center'>
+            <Flex flexDirection='column' gap={3} width='90%' alignItems='center'>
               {data.map((c) => {
                 const otherUser = c.user1.username !== username ? c.user1 : c.user2
                 const sender = c.messages.length === 0 ? undefined : c.messages[0]?.sender.username !== username ? 'other' : 'own'
