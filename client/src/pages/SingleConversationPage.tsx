@@ -4,7 +4,7 @@ import { useAppSelector } from '../hooks/useReduxHooks'
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import { api_conversation_messages_data, api_conversation_messages_data_message, userBaseData } from '../../types'
 import { AxiosError } from 'axios'
-import { Flex, Heading, IconButton, Image, useBreakpoint, useColorModeValue } from '@chakra-ui/react'
+import { Button, Flex, Heading, IconButton, Image, useBreakpoint, useColorModeValue } from '@chakra-ui/react'
 import { ChevronLeft } from 'lucide-react'
 import Message from '../components/conversationsPage/Message'
 import MessageInput from '../components/conversationsPage/MessageInput'
@@ -154,8 +154,17 @@ const SingleConversationPage = () => {
           mr={2}
           onClick={() => navigate(from)}
         />
-        <Image alt='Profile picture' src={userData?.imageUrl} width={10} height={10} rounded='100%' />
-        <Heading size='lg'>{userData?.username}</Heading>
+        <Button
+          gap={2}
+          p={0}
+          variant='ghost'
+          _hover={{ backgroundColor: 'transparent' }}
+          _active={{ backgroundColor: 'transparent' }}
+          onClick={() => navigate(`/user/${userData?.username}`)}
+        >
+          <Image alt='Profile picture' src={userData?.imageUrl} width={10} height={10} rounded='100%' />
+          <Heading size='lg'>{userData?.username}</Heading>
+        </Button>
       </Flex>
       <Flex id='messages-scroll' flexDirection='column-reverse' width='100%' height='100%' overflow='scroll' gap={1}>
         {messages !== null &&
