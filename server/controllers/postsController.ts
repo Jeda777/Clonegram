@@ -15,6 +15,9 @@ export const createPost = async (req: Request, res: Response) => {
 
   const base64Image: string = image.split(';base64,').pop()
   const imageUrl = `assets/posts/${uuidv4()}.png`
+  if (!fs.existsSync('assets/posts')) {
+    fs.mkdirSync('assets/posts')
+  }
   fs.writeFileSync(imageUrl, base64Image, { encoding: 'base64' })
   const modifiedImageUrl = `${process.env.BACKEND_URL}/${imageUrl}`
 
