@@ -26,11 +26,11 @@ export const registerUser = async (req: Request, res: Response) => {
   }
   const base64Image: string = image.split(';base64,').pop()
   const imageUrl = `assets/profilePictures/${uuid()}.png`
-  if (!fs.existsSync('assets/profilePictures')) {
-    fs.mkdirSync('assets/profilePictures')
-  }
   if (!fs.existsSync('assets')) {
     fs.mkdirSync('assets')
+  }
+  if (!fs.existsSync('assets/profilePictures')) {
+    fs.mkdirSync('assets/profilePictures')
   }
   fs.writeFileSync(imageUrl, base64Image, { encoding: 'base64' })
 
