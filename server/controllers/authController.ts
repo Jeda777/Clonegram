@@ -29,6 +29,9 @@ export const registerUser = async (req: Request, res: Response) => {
   if (!fs.existsSync('assets/profilePictures')) {
     fs.mkdirSync('assets/profilePictures')
   }
+  if (!fs.existsSync('assets')) {
+    fs.mkdirSync('assets')
+  }
   fs.writeFileSync(imageUrl, base64Image, { encoding: 'base64' })
 
   const modifiedImageUrl = `${process.env.BACKEND_URL}/${imageUrl}`

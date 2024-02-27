@@ -18,6 +18,9 @@ export const createPost = async (req: Request, res: Response) => {
   if (!fs.existsSync('assets/posts')) {
     fs.mkdirSync('assets/posts')
   }
+  if (!fs.existsSync('assets')) {
+    fs.mkdirSync('assets')
+  }
   fs.writeFileSync(imageUrl, base64Image, { encoding: 'base64' })
   const modifiedImageUrl = `${process.env.BACKEND_URL}/${imageUrl}`
 
