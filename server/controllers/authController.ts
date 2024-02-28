@@ -2,8 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
-import { v4 as uuid } from 'uuid'
-import fs from 'fs'
+import { v2 as cloudinary } from 'cloudinary'
 
 const prisma = new PrismaClient()
 
@@ -24,23 +23,26 @@ export const registerUser = async (req: Request, res: Response) => {
     res.statusMessage = 'Email in use'
     return res.sendStatus(409)
   }
-  const base64Image: string = image.split(';base64,').pop()
-  const imageUrl = `assets/profilePictures/${uuid()}.png`
-  if (!fs.existsSync('assets')) {
-    fs.mkdirSync('assets')
-  }
-  if (!fs.existsSync('assets/profilePictures')) {
-    fs.mkdirSync('assets/profilePictures')
-  }
-  fs.writeFileSync(imageUrl, base64Image, { encoding: 'base64' })
 
-  const modifiedImageUrl = `${process.env.BACKEND_URL}/${imageUrl}`
+  const imageUpload = await cloudinary.uploader.upload(image, {
+    use_filename: false,
+    folder: '/user',
+    transformation: { crop: 'fill', aspect_ratio: 1, quality: 'auto:good' },
+  })
+
   const encryptedPassword = await bcrypt.hash(password, 10)
 
   const accessToken = jwt.sign({ username: username }, process.env.ACCESS_TOKEN_SECRET as string, { expiresIn: '30s' })
   const refreshToken = jwt.sign({ username: username }, process.env.REFRESH_TOKEN_SECRET as string, { expiresIn: '1d' })
   const newUser = await prisma.user.create({
-    data: { imageUrl: modifiedImageUrl, username, email, password: encryptedPassword, refreshToken },
+    data: {
+      imageUrl: imageUpload.secure_url,
+      imagePublicId: imageUpload.public_id,
+      username,
+      email,
+      password: encryptedPassword,
+      refreshToken,
+    },
   })
 
   res.cookie('jwt', newUser.refreshToken, { httpOnly: true, maxAge: 24 * 60 * 60 * 1000 })
