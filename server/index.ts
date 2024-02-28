@@ -7,6 +7,11 @@ import router from './router'
 import cookieParser = require('cookie-parser')
 import verifyJWT from './middleware/verifyJWT'
 import verifiedRouter from './verifiedRouter'
+import { v2 as cloudinary } from 'cloudinary'
+
+cloudinary.config({
+  secure: true,
+})
 
 dotenv.config()
 const port = process.env.PORT || 3000
