@@ -1,8 +1,7 @@
-import { v4 as uuidv4 } from 'uuid'
 import { PrismaClient } from '@prisma/client'
 import { Request, Response } from 'express'
 import { customRequest } from '../types'
-import fs from 'fs'
+import { v2 as cloudinary } from 'cloudinary'
 
 const prisma = new PrismaClient()
 
@@ -13,18 +12,13 @@ export const createPost = async (req: Request, res: Response) => {
   const user = await prisma.user.findUnique({ where: { username } })
   if (!user) return res.sendStatus(404)
 
-  const base64Image: string = image.split(';base64,').pop()
-  const imageUrl = `assets/posts/${uuidv4()}.png`
-  if (!fs.existsSync('assets')) {
-    fs.mkdirSync('assets')
-  }
-  if (!fs.existsSync('assets/posts')) {
-    fs.mkdirSync('assets/posts')
-  }
-  fs.writeFileSync(imageUrl, base64Image, { encoding: 'base64' })
-  const modifiedImageUrl = `${process.env.BACKEND_URL}/${imageUrl}`
+  const imageUpload = await cloudinary.uploader.upload(image, {
+    use_filename: false,
+    folder: '/posts',
+    transformation: { crop: 'fill', aspect_ratio: 1, quality: 'auto:good' },
+  })
 
-  await prisma.post.create({ data: { userId: user?.id, imageUrl: modifiedImageUrl } })
+  await prisma.post.create({ data: { userId: user?.id, imageUrl: imageUpload.secure_url, imagePublicId: imageUpload.public_id } })
 
   return res.sendStatus(200)
 }
@@ -76,9 +70,8 @@ export const deletePost = async (req: Request, res: Response) => {
   const existingPost = await prisma.post.findUnique({ where: { id: postId, userId: user.id } })
   if (!existingPost) return res.sendStatus(404)
 
-  const imageUrl = existingPost.imageUrl.replace((process.env.BACKEND_URL + '/') as string, '')
-  fs.unlinkSync(imageUrl)
   await prisma.post.delete({ where: { id: postId } })
+  await cloudinary.uploader.destroy(existingPost.imagePublicId)
 
   return res.sendStatus(200)
 }
