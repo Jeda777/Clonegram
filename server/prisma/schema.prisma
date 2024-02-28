@@ -12,6 +12,7 @@ model User {
   id String @id @default(uuid())
   username String @unique
   imageUrl String @db.Text
+  imagePublicId String @db.Text
   password String @db.Text
   email String @unique
   description String? @db.Text
@@ -92,6 +93,7 @@ model Post {
   userId String
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   imageUrl String @db.Text
+  imagePublicId String @db.Text
 
   createdAt DateTime @default(now())
 
