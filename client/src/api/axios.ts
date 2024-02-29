@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const BASEURL = import.meta.env.VITE_BACKEND_URL
+const BASEURL = import.meta.env.VITE_API_URL
 
 export default axios.create({ baseURL: BASEURL })
 
