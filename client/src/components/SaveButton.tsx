@@ -3,7 +3,7 @@ import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useErrorPopup from '../hooks/useErrorPopup'
 import { AxiosError } from 'axios'
-import { Flex } from '@chakra-ui/react'
+import { Flex, useColorModeValue } from '@chakra-ui/react'
 import { Bookmark } from 'lucide-react'
 
 interface props {
@@ -37,7 +37,11 @@ const SaveButton = ({ isSaved, postId }: props) => {
 
   return (
     <Flex onClick={handleSave} cursor='pointer'>
-      {!isSavedState ? <Bookmark /> : <Bookmark color='white' fill='white' />}
+      {!isSavedState ? (
+        <Bookmark />
+      ) : (
+        <Bookmark color={useColorModeValue('#1A202C', '#ffffffeb')} fill={useColorModeValue('#1A202C', '#ffffffeb')} />
+      )}
     </Flex>
   )
 }
